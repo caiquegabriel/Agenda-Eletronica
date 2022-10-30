@@ -1,3 +1,4 @@
+import 'package:agenda_eletronica/components/forms/widget_contact_form.dart';
 import 'package:agenda_eletronica/components/widget_contact_preview.dart';
 import 'package:agenda_eletronica/screens/widget_common_screen.dart';
 import 'package:agenda_eletronica/style.dart';
@@ -22,11 +23,13 @@ class HomeScreeState extends State<ContactRegister> with CommonComponent {
       child: ListView(
         padding: noEdgeInsets,
         children: [
-          ContactPreview(),
-          ContactPreview(),
-          ContactPreview(),
-          ContactPreview(),
-          ContactPreview(),
+          Container(
+            child: ContactForm(
+              feedback: () {},
+              subscription: () {},
+              cancelOnclick: () {},
+            )
+          )
         ]
       )
     );

@@ -5,7 +5,7 @@ class CustomButton extends StatefulWidget {
 
   final String? text;
 
-  final IconData icon;
+  final IconData? icon;
 
   final double? iconSize;
 
@@ -23,17 +23,23 @@ class CustomButton extends StatefulWidget {
 
   final bool? enableBorderTop;
 
+  final Color? textColor;
+
+  final Color? backgroundColor;
+
   final Color? iconColor;
 
   const CustomButton({
     Key? key,
     this.iconColor,
+    this.textColor,
+    this.backgroundColor,
     this.enableBorderTop,
     this.margin,
     this.text,
     this.fontSize,
     this.iconSize,
-    required this.icon,
+    this.icon,
     this.onClick,
     this.count,
     this.width,
@@ -66,6 +72,9 @@ class CustomButtonState extends State<CustomButton> {
         }
       },
       child: Container(
+        decoration: BoxDecoration(
+          color: widget.backgroundColor
+        ),
         margin: const EdgeInsets.all(0),
         child: Stack(
           children: [
@@ -73,7 +82,7 @@ class CustomButtonState extends State<CustomButton> {
               margin: widget.margin ?? const EdgeInsets.all(0),
               width: widget.width,
               height: widget.height,
-              child: Column(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -126,14 +135,14 @@ class CustomButtonState extends State<CustomButton> {
                     ?
                       Container(
                         margin: const EdgeInsets.only(
-                          top: 6
+                          left: 6
                         ),
                         alignment: Alignment.center,
                         child: Text(
                           widget.text!,
                           style: TextStyle(
                             fontSize: widget.fontSize ?? 11,
-                            color: _current == true ? Colors.white : Colors.white.withOpacity(0.5),
+                            color: widget.textColor ?? (_current == true ? Colors.white : Colors.white.withOpacity(0.5)),
                             fontWeight: FontWeight.w400
                           ),
                         )
