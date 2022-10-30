@@ -1,12 +1,15 @@
 import 'package:agenda_eletronica/components/widget_badge.dart';
 import 'package:agenda_eletronica/components/widget_contact_photo.dart';
 import 'package:agenda_eletronica/components/widget_custom_button.dart';
+import 'package:agenda_eletronica/entities/contact.dart';
 import 'package:agenda_eletronica/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ContactPreview extends StatefulWidget {
-  const ContactPreview({super.key});
+  final Contact contact;
+
+  const ContactPreview({super.key, required this.contact});
 
   @override
   ContactPreviewState createState() => ContactPreviewState();
@@ -55,7 +58,7 @@ class ContactPreviewState extends State<ContactPreview> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Caíque Gabriel",
+                    "${widget.contact.firstName} ${widget.contact.secondName}",
                     maxLines: 1,
                     style: TextStyle(
                       color: Colors.black,
@@ -80,7 +83,7 @@ class ContactPreviewState extends State<ContactPreview> {
                         ),
                         Expanded(
                           child: Text(
-                            "(88) 9 99345-2282",
+                              "---",
                               maxLines: 1,
                               style: TextStyle(
                                 color: Color.fromARGB(255, 24, 24, 24),

@@ -11,3 +11,10 @@ void navigatorPushNamed(context, String routeName, {dynamic arguments, bool igno
     Navigator.pushNamed(context, routeName, arguments: arguments);
   } 
 } 
+
+///
+/// Retorna apenas os números presente da String
+///
+String getNumbers(String value) {
+  return value.replaceAll(RegExp(r'[^0-9]'),'');
+}

@@ -33,9 +33,10 @@ class HomeScreeState extends State<ContactRegister> with CommonComponent {
   @override
   void initState() {
     Modular.get<ContactService>().fetchContacts()!.then((results) {
-      
+      int countRegister = results.length;
+      debugPrint(" $countRegister Registros encontrados");
     });
-  //  (DB()).deleteAllDataBase();
+    // (DB()).deleteAllDataBase();
   }
 
   @override

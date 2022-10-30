@@ -1,12 +1,18 @@
-import 'package:agenda_eletronica/data/db/db.dart';
 import 'package:agenda_eletronica/entities/contact.dart';
+import 'package:agenda_eletronica/helpers.dart';
+import 'package:agenda_eletronica/services/Service.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
-class ContactService {
+class ContactService extends Service {
 
+  ContactService() : super();
+
+  ///
+  /// Cadastrar um novo contato
+  ///
   Future? registerContact({required Contact contact, String? photo}) async {
-    dynamic conn = await (DB()).connect(); 
+    dynamic conn = await dbConn; 
 
     if(conn == null) {
       return null;
@@ -16,14 +22,28 @@ class ContactService {
       final userId = await conn!.rawInsert(
         'INSERT INTO contact(firstName, secondName, email, cpf, photo) VALUES(?, ?, ?, ?, ?)',
         [
-          contact.firstName,
-          contact.secondName,
-          contact.email,
-          contact.cpf,
+          contact.firstName ?? "",
+          contact.secondName ?? "",
+          contact.email ?? "",
+          contact.cpf ?? "",
           ""
         ]
       );
-      return userId;
+
+      contact.telephones.forEach((key, value) async {
+        String telephone = getNumbers(value['telephone']);
+        String type = value['type'];
+        await conn!.rawInsert(
+          'INSERT INTO telephone(userId, telephone, type) VALUES(?, ?, ?)',
+          [
+            userId,
+            telephone,
+            type
+          ]
+        );
+      });
+
+      return true;
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -32,10 +52,9 @@ class ContactService {
   }
 
   Future? fetchContacts() async {
-    dynamic conn = await (DB()).connect(); 
+    dynamic conn = await dbConn;
 
     if(conn == null) {
-      debugPrint("Null");
       return null;
     }
 
@@ -46,7 +65,7 @@ class ContactService {
 
       List<Contact> contactsEntities = [];
      
-      contacts.forEach((value) {
+      for (var value in contacts) {
         contactsEntities.add(
           Contact(
             id: value['id'],
@@ -58,7 +77,7 @@ class ContactService {
             telephones: {}
           )
         );
-      });
+      }
 
       return contactsEntities;
     } catch (e) {
@@ -70,4 +89,7 @@ class ContactService {
 
   }
 
+  Future? fetchContactById() async {
+
+  }
 }

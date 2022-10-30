@@ -23,7 +23,7 @@ class Tables {
       onConfigure: (Database db) async {
         // Tabela do telefone
         await db.execute(
-          'CREATE TABLE IF NOT EXISTS telephone (id INTEGER PRIMARY KEY AUTOINCREMENT, telephone TEXT, userId INTEGER, type TEXT)'
+          'CREATE TABLE IF NOT EXISTS telephone (id INTEGER PRIMARY KEY AUTOINCREMENT, telephone TEXT, type TEXT, userId INTEGER)'
         );
         // Tabela do contato
         await db.execute(
@@ -33,7 +33,7 @@ class Tables {
       onUpgrade: (Database db, int a, int b) async {
         // Tabela do telefone
         await db.execute(
-          'CREATE TABLE IF NOT EXISTS telephone (id INTEGER PRIMARY KEY AUTOINCREMENT, telephone TEXT, userId INTEGER, type TEXT)'
+          'CREATE TABLE IF NOT EXISTS telephone (id INTEGER PRIMARY KEY AUTOINCREMENT, telephone TEXT, type TEXT, userId INTEGER)'
         );
         // Tabela do contato
         await db.execute(
