@@ -2,6 +2,7 @@ import 'package:agenda_eletronica/components/forms/widget_contact_telephone_form
 import 'package:agenda_eletronica/components/widget_custom_button.dart';
 import 'package:agenda_eletronica/components/widget_custom_input.dart';
 import 'package:agenda_eletronica/entities/contact.dart';
+import 'package:agenda_eletronica/entities/telephone.dart';
 import 'package:agenda_eletronica/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class ContactFormState extends State<ContactForm> {
 
   List<ContactTelephoneForm> _telephonesForms = [];
 
-  Map<int, Map<String, String>> telephonesValues = {};
+  List<Telephone> telephonesValues = [];
  
   void _addTelephoneForm() {
     if (!mounted) return;
@@ -81,19 +82,18 @@ class ContactFormState extends State<ContactForm> {
   }
 
   void _onFinalSubmit(){
-
-    telephonesValues = {};
-  //  String email    = formKeys['email']!.currentState!.inputController().text;
-  //  String password = formKeys['password']!.currentState!.inputController().text;
+    telephonesValues = [];
     telephoneKeys.forEach((k, v) {
       if (v.currentState != null) {
         if (v.currentState!.enabled) {
           Map value = v.currentState!.getValue();
           if (value['telephone'] != null) {
-            telephonesValues[(telephonesValues.length + 1)] = {
-              'type' : value['type'],
-              'telephone' : value['telephone'],
-            };
+            telephonesValues.add(
+              Telephone(
+                type: value['type'],
+                telephone: value['telephone'],
+              )
+            );
           } else {
             // Erro no estado do input
           }

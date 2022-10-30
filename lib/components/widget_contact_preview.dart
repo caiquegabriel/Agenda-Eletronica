@@ -83,7 +83,7 @@ class ContactPreviewState extends State<ContactPreview> {
                         ),
                         Expanded(
                           child: Text(
-                              "---",
+                              widget.contact.principalTelephone() ?? "Não disponível",
                               maxLines: 1,
                               style: TextStyle(
                                 color: Color.fromARGB(255, 24, 24, 24),

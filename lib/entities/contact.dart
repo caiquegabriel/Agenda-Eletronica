@@ -1,3 +1,6 @@
+import 'package:agenda_eletronica/entities/telephone.dart';
+import 'package:flutter/material.dart';
+
 class Contact {
 
   int? _id;
@@ -6,7 +9,7 @@ class Contact {
   String? _email;
   String? _cpf;
   String? _photo;
-  Map<int, Map> _telephones = {};
+  List<Telephone> _telephones = [];
 
   Contact ({
     required int id,
@@ -15,7 +18,7 @@ class Contact {
     required String email,
     required String cpf,
     String photo = "",
-    Map<int, Map> telephones = const {}
+    List<Telephone> telephones = const <Telephone>[]
   }) {
     _id = id;
     _firstName = firstName;
@@ -38,6 +41,18 @@ class Contact {
 
   String? get cpf => _cpf;
 
-  Map<int, Map> get telephones => _telephones;
+  List<Telephone> get telephones => _telephones;
+
+  String? principalTelephone() {
+    String? principalTelephone;
+    for (var telephone in _telephones) {
+      if (telephone.type == "residencial") {
+        principalTelephone = telephone.telephone;
+        break;
+      }
+    }
+
+    return principalTelephone;
+  }
 
 }
