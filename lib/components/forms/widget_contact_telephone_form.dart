@@ -81,7 +81,7 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
         color: Colors.white,
         border: Border.all(
           width: 1,
-          color: Colors.grey
+          color: const Color.fromARGB(255, 214, 214, 214)
         ),
         borderRadius: BorderRadius.circular(5)
       ),

@@ -1,4 +1,5 @@
 import 'package:agenda_eletronica/components/forms/widget_contact_form.dart';
+import 'package:agenda_eletronica/data/db/db.dart';
 import 'package:agenda_eletronica/entities/contact.dart';
 import 'package:agenda_eletronica/providers/contact_provider.dart';
 import 'package:agenda_eletronica/screens/widget_common_screen.dart';
@@ -22,7 +23,7 @@ class ContactRegisterState extends State<ContactRegister> with CommonComponent {
   @override
   void initState() {
     super.initState();
-    // (DB()).deleteAllDataBase();
+    (DB()).deleteAllDataBase();
   }
 
   @override

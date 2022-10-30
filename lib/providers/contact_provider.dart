@@ -32,9 +32,11 @@ class ContactProvider extends ChangeNotifier {
     });
   }
 
-  void removeContact(Contact contact) async {
-    await _contactService.removeContact(contact: contact);
-    loadContactPreviews();
+  Future removeContact(Contact contact) {
+    return _contactService.removeContact(contact: contact)!.then((results) {
+      loadContactPreviews();
+      return results;
+    });
   }
 
   Future udpdateContact(Contact contact) {

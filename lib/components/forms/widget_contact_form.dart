@@ -101,33 +101,6 @@ class ContactFormState extends State<ContactForm> {
     });
   }
 
-  Future<void> _showMyDialog({required String title, required String description}) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(description)
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Entendi'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void _onFinalSubmit() {
 
     String firstName = formKeys['firstName']!.currentState!.inputController().text;
@@ -136,7 +109,8 @@ class ContactFormState extends State<ContactForm> {
     String email = formKeys['email']!.currentState!.inputController().text;
 
     if (firstName.isEmpty || secondName.isEmpty) {
-      _showMyDialog(
+      customDialog(
+        context,
         title: "Nome e/ou Sobrenome vazios!",
         description: "O Nome e Sobrenome não podem ser vazios."
       );
@@ -144,7 +118,8 @@ class ContactFormState extends State<ContactForm> {
     }
 
     if (!CPFValidator.isValid(cpf)) {
-      _showMyDialog(
+      customDialog(
+        context,
         title: "CPF inválido!",
         description: "O CPF inserido é inválido."
       );
@@ -152,7 +127,8 @@ class ContactFormState extends State<ContactForm> {
     }
 
     if (!isEmail(email)) {
-      _showMyDialog(
+      customDialog(
+        context,
         title: "E-mail inválido!",
         description: "O e-mail inserido é inválido."
       );
@@ -179,7 +155,8 @@ class ContactFormState extends State<ContactForm> {
     });
 
     if (telephonesValues.length == 0) {
-      _showMyDialog(
+      customDialog(
+        context,
         title: "Nenhum telefone inserido.",
         description: "Insira pelo menos um telefone válido!"
       );
@@ -196,7 +173,8 @@ class ContactFormState extends State<ContactForm> {
     );
 
     widget.onSubmit(contact).then((results) {
-      _showMyDialog(
+      customDialog(
+        context,
         title: "Dados atualizados!",
         description: "As informações de ${widget.contact.firstName} foram atualizadas com sucesso!"
       );
@@ -478,6 +456,10 @@ class ContactFormState extends State<ContactForm> {
             ]
           ),
           Container(
+            margin: const EdgeInsets.only(
+              top: 10,
+              bottom: 20
+            ),
             padding: const EdgeInsets.all(5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
