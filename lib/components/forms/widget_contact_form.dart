@@ -86,6 +86,17 @@ class ContactFormState extends State<ContactForm> {
   void _onFinalSubmit(){
   //  String email    = formKeys['email']!.currentState!.inputController().text;
   //  String password = formKeys['password']!.currentState!.inputController().text;
+    telephoneKeys.forEach((k, v) {
+      if (v.currentState != null) {
+        if (v.currentState!.enabled) {
+          debugPrint("Ativado, valor: " + v.currentState!.getValue()['telephone']);
+        } else {
+          debugPrint("Não ativo");
+        }
+      } else {
+        debugPrint("Null");
+      }
+    });
   }
   
   void toNext(GlobalKey currentKey) {
@@ -233,13 +244,17 @@ class ContactFormState extends State<ContactForm> {
             children: _telephonesForms,
           ),
           CustomButton(
-            margin: const EdgeInsets.all(15),
+            margin: const EdgeInsets.all(5),
             onClick: _onFinalSubmit,
-            height: 35,
+            height: 45,
             backgroundColor: primaryColor,
             fontSize: 16,
             textColor: Colors.white,
-            text: "Fazer Login",
+            icon: CupertinoIcons.add,
+            iconSize: 22,
+            iconMargin: const EdgeInsets.only(right: 20),
+            text: "Registrar Contato",
+            borderRadius: BorderRadius.circular(5),
             iconColor: Colors.white.withOpacity(0.5),
           )
         ],

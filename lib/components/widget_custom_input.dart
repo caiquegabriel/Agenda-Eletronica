@@ -165,8 +165,8 @@ class InputState extends State<Input>{
       height: widget.height ?? 40,
       margin: widget.margin ?? const EdgeInsets.all(0),
       padding: widget.padding ?? const EdgeInsets.only(
-        left: 10,
-        right: 10
+        left: 5,
+        right: 5
       ),
       decoration: BoxDecoration(
         color: widget.backgroundColor ?? Colors.white,
@@ -188,7 +188,7 @@ class InputState extends State<Input>{
                   color: Colors.transparent,
                   child: SizedBox(
                     width: 30,
-                    height:30,
+                    height: 30,
                     child: Icon(
                       widget.icon,
                       size: widget.iconSize ?? 15,
@@ -222,7 +222,7 @@ class InputState extends State<Input>{
                 controller:_inputController,
                 style: TextStyle(
                   height: _currentLenght == 0 ? 1 : null,
-                  fontSize: widget.fontSize ?? 20,
+                  fontSize: widget.fontSize ?? 18,
                   fontWeight: widget.textWeight ?? FontWeight.normal,
                   letterSpacing: widget.letterSpacing,
                   color: widget.textColor ?? const Color.fromRGBO(33, 33, 33, 1)

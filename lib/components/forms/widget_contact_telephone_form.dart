@@ -1,3 +1,4 @@
+import 'package:agenda_eletronica/components/widget_custom_button.dart';
 import 'package:agenda_eletronica/components/widget_custom_input.dart';
 import 'package:agenda_eletronica/style.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,26 +18,63 @@ class ContactTelephoneForm extends StatefulWidget {
 
 
 class ContactTelephoneFormState extends State<ContactTelephoneForm> {
+
+  String? _telephoneType;
+
+  String? _telephone;
+
+  bool _enabled = true;
+
+  void hideForm() {
+    if (!mounted) return;
+
+    setState(() {
+      _enabled = false;
+    });
+  }
+
+  bool get enabled => _enabled;
+
+  Map<String, dynamic> getValue() {
+    debugPrint("widget.inputKey.toString():");
+    debugPrint(widget.inputKey.toString());
+    return {
+      'telephone' : 'widget.inputKey',
+      'type' : _telephoneType
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    if (!_enabled) {
+      return const SizedBox.shrink();
+    }
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white
       ),
       child: Row(
         children: [
+          CustomButton(
+            borderRadius: BorderRadius.circular(100),
+            margin: const EdgeInsets.only(left: 3.5, right: 3.5),
+            width: 25,
+            height: 25,
+            backgroundColor: Colors.red,
+            fontSize: 13,
+            iconSize: 12,
+            iconColor: Colors.white,
+            icon: CupertinoIcons.minus,
+            onClick: hideForm,
+          ),
           Container(
-            padding: const EdgeInsets.all(15),
             height: 45,
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 234, 229, 229),
-              borderRadius: BorderRadius.circular(100)
-            ),
-            margin: const EdgeInsets.only(right: 10),
-            width: 120,
+            margin: const EdgeInsets.only(right: 7),
+            width: 100,
             child: DropdownButton<String>(
-              value: "trabalho",
+              value: "Trabalho",
               underline: Container(
                 height: 1,
                 color: Colors.transparent,
@@ -46,43 +84,55 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
                 color: primaryColor,
                 size: 15
               ),
-              elevation: 16,
+              elevation: 13,
               style: const TextStyle(
                 color: primaryColor,
                 overflow: TextOverflow.ellipsis
               ),
               onChanged: (String? value) {
-                // This is called when the user selects an item.
+                if (!mounted) return;
                 setState(() {
-                //  dropdownValue = value!;
+                  _telephoneType = value;
                 });
               },
-              items: ["trabalho", "celular", "residencial"].map<DropdownMenuItem<String>>((String value) {
+              items: ["Trabalho", "Celular", "Residencial"].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(2.5),
+                    height: 45,
+                    width: 85,
+                    child: Text(value),
+                  )
                 );
               }).toList(),
             ),
           ),
           Expanded(
             child: Input(
-              iconColor: Colors.grey, borderRadius: 5,
+              iconColor: Colors.grey,
+              borderRadius: 5,
               borderColor: Colors.black.withOpacity(0.125),
-              borderWidth: 0,
+              borderWidth: 0.25,
               backgroundColor: const Color.fromRGBO(255, 255, 255,  0.95 ),
               focusNode: widget.inputFocus,
-              textColor: Colors.black54,
+              textColor: Colors.black,
+              textWeight: FontWeight.w600,
               formSubmitFunction: widget.toNext,
               key: widget.inputKey,
               initialValue: widget.initialValue == null ? "" : widget.initialValue!,
-              validatorFunction: (){ },
-              labelColor: Colors.black38,
-              height: 50,
+              validatorFunction: (){},
+              height: 45,
+              fontSize: 15,
               hintColor: Colors.black26,
               icon: CupertinoIcons.device_phone_portrait,
-              margin: const EdgeInsets.only(right: 5, top: 5, bottom: 5),
-              hintText: "Caique"
+              margin: const EdgeInsets.only(
+                right: 5,
+                top: 5,
+                bottom: 5
+              ),
+              hintText: "(00) 0 0000-0000",
             )
           )
         ],

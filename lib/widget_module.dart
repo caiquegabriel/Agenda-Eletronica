@@ -14,12 +14,12 @@ class AppModule extends Module {
   @override
   List<ModularRoute> get routes => [
     ChildRoute(
-      '/',
+      '/contact_register',
       child: (context, args) => const HomeScreen(),
       transition: TransitionType.noTransition
     ),
     ChildRoute(
-      '/contact_register',
+      '/',
       child: (context, args) => const ContactRegister(),
       transition: TransitionType.noTransition
     ),

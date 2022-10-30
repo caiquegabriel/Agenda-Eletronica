@@ -29,6 +29,10 @@ class CustomButton extends StatefulWidget {
 
   final Color? iconColor;
 
+  final BorderRadius? borderRadius;
+
+  final EdgeInsets? iconMargin;
+
   const CustomButton({
     Key? key,
     this.iconColor,
@@ -43,7 +47,9 @@ class CustomButton extends StatefulWidget {
     this.onClick,
     this.count,
     this.width,
-    this.height
+    this.height,
+    this.borderRadius,
+    this.iconMargin
   }) : super(key: key);
 
   @override
@@ -72,14 +78,16 @@ class CustomButtonState extends State<CustomButton> {
         }
       },
       child: Container(
+        clipBehavior: Clip.antiAlias,
+        margin: widget.margin ?? const EdgeInsets.all(0),
         decoration: BoxDecoration(
+          borderRadius: widget.borderRadius,
           color: widget.backgroundColor
         ),
-        margin: const EdgeInsets.all(0),
         child: Stack(
           children: [
             Container(
-              margin: widget.margin ?? const EdgeInsets.all(0),
+              margin: const EdgeInsets.all(0),
               width: widget.width,
               height: widget.height,
               child: Row(
@@ -89,7 +97,7 @@ class CustomButtonState extends State<CustomButton> {
                   Container(
                     width: widget.text == null ? widget.width : null,
                     height: widget.text == null ? widget.height : null,
-                    margin: const EdgeInsets.all(0),
+                    margin: widget.icon != null ? widget.iconMargin : null,
                     child: Stack(
                       children: [
                         Container(
