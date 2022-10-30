@@ -1,29 +1,24 @@
 import 'package:agenda_eletronica/components/forms/widget_contact_telephone_form.dart';
 import 'package:agenda_eletronica/components/widget_custom_button.dart';
 import 'package:agenda_eletronica/components/widget_custom_input.dart';
+import 'package:agenda_eletronica/entities/contact.dart';
 import 'package:agenda_eletronica/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ContactForm extends StatefulWidget{ 
 
-  final Function cancelOnclick;
-
-  final Function subscription;
+  final Function onSubmit;
 
   final Function feedback;
-
-  final bool? hideButtons;
 
   final Map<String, dynamic>? initialValue; 
 
   const ContactForm({
     Key? key,
     this.initialValue,
-    this.hideButtons,
     required this.feedback,
-    required this.cancelOnclick,
-    required this.subscription
+    required this.onSubmit
   }) : super(key: key);
 
   @override
@@ -38,18 +33,20 @@ class ContactFormState extends State<ContactForm> {
   Map<String, FocusNode > formFocus = {};
 
   List<ContactTelephoneForm> _telephonesForms = [];
+
+  Map<int, Map<String, String>> telephonesValues = {};
  
   void _addTelephoneForm() {
     if (!mounted) return;
 
     GlobalKey formKey = telephoneKeys[telephoneKeys.length] = GlobalKey();
-    FocusNode formFocus = telephoneFocus[telephoneKeys.length] = FocusNode();
+    FocusNode inputFocus = telephoneFocus[telephoneKeys.length] = FocusNode();
 
     setState(() {
       _telephonesForms.add(
         ContactTelephoneForm(
-          inputKey: formKey,
-          inputFocus: formFocus,
+          key: formKey,
+          inputFocus: inputFocus,
           toNext: toNext,
           initialValue: "(00) 0 0000-0000",
         )
@@ -84,19 +81,36 @@ class ContactFormState extends State<ContactForm> {
   }
 
   void _onFinalSubmit(){
+
+    telephonesValues = {};
   //  String email    = formKeys['email']!.currentState!.inputController().text;
   //  String password = formKeys['password']!.currentState!.inputController().text;
     telephoneKeys.forEach((k, v) {
       if (v.currentState != null) {
         if (v.currentState!.enabled) {
-          debugPrint("Ativado, valor: " + v.currentState!.getValue()['telephone']);
-        } else {
-          debugPrint("Não ativo");
+          Map value = v.currentState!.getValue();
+          if (value['telephone'] != null) {
+            telephonesValues[(telephonesValues.length + 1)] = {
+              'type' : value['type'],
+              'telephone' : value['telephone'],
+            };
+          } else {
+            // Erro no estado do input
+          }
         }
-      } else {
-        debugPrint("Null");
       }
     });
+
+    Contact contact = Contact(
+      id: 0,
+      firstName: formKeys['firstName']!.currentState!.inputController().text,
+      secondName: formKeys['secondName']!.currentState!.inputController().text,
+      email: formKeys['email']!.currentState!.inputController().text,
+      cpf: formKeys['cpf']!.currentState!.inputController().text,
+      telephones: telephonesValues
+    );
+
+    widget.onSubmit(contact);
   }
   
   void toNext(GlobalKey currentKey) {

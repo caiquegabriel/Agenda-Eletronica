@@ -6,11 +6,10 @@ import 'package:flutter/material.dart';
 
 class ContactTelephoneForm extends StatefulWidget {
   final FocusNode? inputFocus;
-  final Key? inputKey;
   final String? initialValue;
   final Function? toNext;
 
-  const ContactTelephoneForm({super.key, this.inputFocus, this.toNext, this.inputKey, this.initialValue});
+  const ContactTelephoneForm({super.key, this.inputFocus, this.toNext, this.initialValue});
 
   @override
   ContactTelephoneFormState createState() => ContactTelephoneFormState();
@@ -19,11 +18,13 @@ class ContactTelephoneForm extends StatefulWidget {
 
 class ContactTelephoneFormState extends State<ContactTelephoneForm> {
 
-  String? _telephoneType;
+  String _telephoneType = "trabalho";
 
   String? _telephone;
 
   bool _enabled = true;
+
+  final GlobalKey<InputState> _inputKey = GlobalKey();
 
   void hideForm() {
     if (!mounted) return;
@@ -36,10 +37,12 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
   bool get enabled => _enabled;
 
   Map<String, dynamic> getValue() {
-    debugPrint("widget.inputKey.toString():");
-    debugPrint(widget.inputKey.toString());
+    String? inputValue = null;
+    if (_inputKey.currentState != null) {
+      inputValue = _inputKey.currentState!.inputController().value.text;
+    }
     return {
-      'telephone' : 'widget.inputKey',
+      'telephone' : inputValue,
       'type' : _telephoneType
     };
   }
@@ -74,7 +77,7 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
             margin: const EdgeInsets.only(right: 7),
             width: 100,
             child: DropdownButton<String>(
-              value: "Trabalho",
+              value: "trabalho",
               underline: Container(
                 height: 1,
                 color: Colors.transparent,
@@ -92,10 +95,10 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
               onChanged: (String? value) {
                 if (!mounted) return;
                 setState(() {
-                  _telephoneType = value;
+                  _telephoneType = value ?? "trabalho";
                 });
               },
-              items: ["Trabalho", "Celular", "Residencial"].map<DropdownMenuItem<String>>((String value) {
+              items: ["trabalho", "celular", "residencial"].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Container(
@@ -103,7 +106,7 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
                     padding: const EdgeInsets.all(2.5),
                     height: 45,
                     width: 85,
-                    child: Text(value),
+                    child: Text(value.toUpperCase()),
                   )
                 );
               }).toList(),
@@ -120,7 +123,7 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
               textColor: Colors.black,
               textWeight: FontWeight.w600,
               formSubmitFunction: widget.toNext,
-              key: widget.inputKey,
+              key: _inputKey,
               initialValue: widget.initialValue == null ? "" : widget.initialValue!,
               validatorFunction: (){},
               height: 45,
