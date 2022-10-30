@@ -24,8 +24,8 @@ class ContactView extends StatefulWidget {
 
 class ContactViewState extends State<ContactView> with CommonComponent {
 
-  void onSubmit(Contact contact, {Uint8List? photo}) {
-    Modular.get<ContactProvider>().udpdateContact(contact);
+  Future onSubmit(Contact contact, {Uint8List? photo}) {
+    return Modular.get<ContactProvider>().udpdateContact(contact);
   }
 
   void onRemove() {

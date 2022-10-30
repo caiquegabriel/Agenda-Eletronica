@@ -3,6 +3,7 @@ import 'package:agenda_eletronica/components/widget_custom_input.dart';
 import 'package:agenda_eletronica/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class ContactTelephoneForm extends StatefulWidget {
 
@@ -155,6 +156,14 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
               textColor: Colors.black,
               textWeight: FontWeight.w600,
               formSubmitFunction: widget.toNext,
+              mask: [
+                MaskTextInputFormatter(
+                  initialText: widget.telephoneValue ?? "",
+                  mask: '(##) # ####-####', 
+                  filter: { "#": RegExp(r'[0-9]') },
+                  type: MaskAutoCompletionType.lazy
+                )
+              ],
               key: _inputKey,
               initialValue: widget.telephoneValue ?? "",
               validatorFunction: (){},

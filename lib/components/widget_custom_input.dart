@@ -117,36 +117,26 @@ class Input extends StatefulWidget{
 
 class InputState extends State<Input>{  
 
-  final TextEditingController _inputController =  TextEditingController(); 
+  final TextEditingController _inputController = TextEditingController(); 
 
   bool _fieldUpdated = false;
 
   int _currentLenght = 0;
 
   @override 
-  void initState(){
-    super.initState() ;
+  void initState() {
+    super.initState();
+    updateValue(widget.initialValue ?? "");
   }
 
   void updateValue(String value) {
-    if(mounted) {
-      _inputController.text = value;
-    } 
+    setState(() {
+      _inputController.text = widget.initialValue ?? "";
+    });
   }
 
   int getCurrentLenght() {
     return _currentLenght;
-  }
-
-  void _updateField() {
-    if(mounted) {
-      if(widget.initialValue!= null) {
-        setState(() {
-          _fieldUpdated = true;
-        });
-        _inputController.text = widget.initialValue.toString();
-      } 
-    } 
   }
 
   TextEditingController inputController() {
@@ -155,13 +145,6 @@ class InputState extends State<Input>{
 
   @override
   Widget build(BuildContext context) {
-
-    if(!_fieldUpdated) {
-      WidgetsBinding.instance
-        .addPostFrameCallback(
-          (_) => _updateField()
-        );  
-    }
 
     return Container(
       width: widget.width ?? double.infinity,
@@ -224,7 +207,7 @@ class InputState extends State<Input>{
                   maxLength: widget.maxLength,
                   focusNode: widget.focusNode,
                   textAlign: widget.textAlign ?? TextAlign.start,
-                  controller:_inputController,
+                  controller: _inputController,
                   style: TextStyle(
                     height: _currentLenght == 0 ? 1 : null,
                     fontSize: widget.fontSize ?? 18,

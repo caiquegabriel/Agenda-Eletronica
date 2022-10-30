@@ -37,14 +37,18 @@ class ContactProvider extends ChangeNotifier {
     loadContactPreviews();
   }
 
-  void udpdateContact(Contact contact) async {
-    await _contactService.updateContact(contact: contact);
-    loadContactPreviews();
+  Future udpdateContact(Contact contact) {
+    return _contactService.updateContact(contact: contact)!.then((results) {
+      loadContactPreviews();
+      return results;
+    });
   }
 
-  void register(Contact contact) async {
-    await _contactService.registerContact(contact: contact);
-    loadContactPreviews();
+  Future register(Contact contact) {
+    return _contactService.registerContact(contact: contact)!.then((results) {
+      loadContactPreviews();
+      return results;
+    });
   }
 
   void loadContactPreviews() async {

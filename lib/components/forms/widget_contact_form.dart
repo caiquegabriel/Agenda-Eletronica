@@ -5,10 +5,13 @@ import 'package:agenda_eletronica/components/widget_custom_button.dart';
 import 'package:agenda_eletronica/components/widget_custom_input.dart';
 import 'package:agenda_eletronica/entities/contact.dart';
 import 'package:agenda_eletronica/entities/telephone.dart';
+import 'package:agenda_eletronica/helpers.dart';
 import 'package:agenda_eletronica/style.dart';
+import 'package:cpf_cnpj_validator/cpf_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class ContactForm extends StatefulWidget{ 
 
@@ -98,7 +101,64 @@ class ContactFormState extends State<ContactForm> {
     });
   }
 
+  Future<void> _showMyDialog({required String title, required String description}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(description)
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Entendi'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _onFinalSubmit() {
+
+    String firstName = formKeys['firstName']!.currentState!.inputController().text;
+    String secondName = formKeys['secondName']!.currentState!.inputController().text;
+    String cpf = formKeys['cpf']!.currentState!.inputController().text;
+    String email = formKeys['email']!.currentState!.inputController().text;
+
+    if (firstName.isEmpty || secondName.isEmpty) {
+      _showMyDialog(
+        title: "Nome e/ou Sobrenome vazios!",
+        description: "O Nome e Sobrenome não podem ser vazios."
+      );
+      return;
+    }
+
+    if (!CPFValidator.isValid(cpf)) {
+      _showMyDialog(
+        title: "CPF inválido!",
+        description: "O CPF inserido é inválido."
+      );
+      return;
+    }
+
+    if (!isEmail(email)) {
+      _showMyDialog(
+        title: "E-mail inválido!",
+        description: "O e-mail inserido é inválido."
+      );
+      return;
+    }
+
     telephonesValues = [];
     telephoneKeys.forEach((k, v) {
       if (v.currentState != null) {
@@ -118,16 +178,30 @@ class ContactFormState extends State<ContactForm> {
       }
     });
 
+    if (telephonesValues.length == 0) {
+      _showMyDialog(
+        title: "Nenhum telefone inserido.",
+        description: "Insira pelo menos um telefone válido!"
+      );
+      return;
+    }
+
     Contact contact = Contact(
       id: widget.contact.id ?? 0,
-      firstName: formKeys['firstName']!.currentState!.inputController().text,
-      secondName: formKeys['secondName']!.currentState!.inputController().text,
-      email: formKeys['email']!.currentState!.inputController().text,
-      cpf: formKeys['cpf']!.currentState!.inputController().text,
+      firstName: firstName,
+      secondName: secondName,
+      email: email,
+      cpf: cpf,
       telephones: telephonesValues
     );
 
-    widget.onSubmit(contact);
+    widget.onSubmit(contact).then((results) {
+      _showMyDialog(
+        title: "Dados atualizados!",
+        description: "As informações de ${widget.contact.firstName} foram atualizadas com sucesso!"
+      );
+      return;
+    });
   }
   
   void toNext(GlobalKey currentKey) {
@@ -363,6 +437,14 @@ class ContactFormState extends State<ContactForm> {
                 borderWidth: 0,
                 backgroundColor: const Color.fromRGBO(255, 255, 255,  0.95 ),
                 focusNode: formFocus['cpf'],
+                mask: [
+                  MaskTextInputFormatter(
+                    initialText: widget.contact.cpf.toString(),
+                    mask: '###.###.###-##',
+                    filter: { "#": RegExp(r'[0-9]') },
+                    type: MaskAutoCompletionType.eager
+                  )
+                ],
                 textColor: Colors.black54,
                 formSubmitFunction: toNext,
                 key: formKeys['cpf'],
