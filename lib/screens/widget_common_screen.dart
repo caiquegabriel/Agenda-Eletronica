@@ -5,7 +5,7 @@ import '../components/template/widget_header.dart';
 
 mixin CommonComponent <T extends StatefulWidget > on State<T> {
 
-  Widget content({Widget? child}) {
+  Widget content({Widget? child, String? title, bool? enableBackButton}) {
     return WillPopScope(
       onWillPop: () {  
         return Future.value(false);
@@ -18,7 +18,7 @@ mixin CommonComponent <T extends StatefulWidget > on State<T> {
           }, 
           child: Column(
             children: [
-              const TemplateHeader(),
+              TemplateHeader(title: title, enableBackButton: enableBackButton),
               Expanded(
                 child: Container(
                   child: child

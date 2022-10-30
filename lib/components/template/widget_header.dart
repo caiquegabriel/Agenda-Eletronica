@@ -4,9 +4,14 @@ import 'package:agenda_eletronica/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class TemplateHeader extends StatefulWidget {
+import '../../helpers.dart';
 
-  const TemplateHeader ({super.key});
+class TemplateHeader extends StatefulWidget {
+  final String? title;
+
+  final bool? enableBackButton;
+
+  const TemplateHeader ({super.key, this.title, this.enableBackButton});
 
   @override
   TemplateHeaderState createState() => TemplateHeaderState();
@@ -37,11 +42,29 @@ class TemplateHeaderState extends State<TemplateHeader> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              (widget.enableBackButton == true)
+              ?
+                CustomButton(
+                  width: 45,
+                  height: 45,
+                  icon: CupertinoIcons.back,
+                  iconSize: 25,
+                  onClick: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              :
+                const CustomButton(
+                  width: 45,
+                  height: 45,
+                  icon: CupertinoIcons.search,
+                  iconSize: 25,
+                ),
               Expanded(
                 child: Container(
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    "Agenda",
+                  alignment: Alignment.center,
+                  child: Text(
+                    widget.title ?? "Agenda",
                     style: TextStyle(
                       fontSize: 20.7,
                       fontWeight: FontWeight.w900,
@@ -50,11 +73,14 @@ class TemplateHeaderState extends State<TemplateHeader> {
                   ),
                 )
               ),
-              const CustomButton(
+              CustomButton(
                 width: 45,
                 height: 45,
                 icon: CupertinoIcons.add,
                 iconSize: 25,
+                onClick: () {
+                  navigatorPushNamed(context, '/contact_register');
+                },
               ),
             ],
           ),

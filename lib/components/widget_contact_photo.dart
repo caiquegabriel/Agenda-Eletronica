@@ -1,4 +1,3 @@
-import 'package:agricultorsuiteapp/components/widget_custom_image.dart';
 import 'package:flutter/material.dart';
 
 class ContactPhoto extends StatefulWidget {
@@ -41,16 +40,16 @@ class ContactPhoto extends StatefulWidget {
 
 class ContactPhotoState extends State<ContactPhoto> {
 
-  final GlobalKey<CustomImageState> _keyImageNetwork = GlobalKey();
+  //final GlobalKey<CustomImageState> _keyImageNetwork = GlobalKey();
   
   String? _avatar;  
   
   void removeContactPhoto(){
-    _keyImageNetwork.currentState!.update("");
+  //  _keyImageNetwork.currentState!.update("");
   }
 
   void updateContactPhoto(dynamic avatar) {    
-    _keyImageNetwork.currentState!.update(avatar); 
+  //  _keyImageNetwork.currentState!.update(avatar); 
   }
 
   @override
@@ -83,20 +82,19 @@ class ContactPhotoState extends State<ContactPhoto> {
           splashColor: Colors.transparent,
           hoverColor: Colors.transparent,
           highlightColor: Colors.transparent,
-          child: CustomImage(
-            key: _keyImageNetwork,
-            image: _avatar ?? "",
-            local: widget.local,
-            defaultImage: "assets/images/default_avatar.png",
-            height: widget.height ?? 40,
-            width:  widget.width ?? 40,
-            fit: BoxFit.cover
-          ),
           onTap: () => ({
             if(widget.onClick != null) {
               widget.onClick!()
             }
-          })
+          }),
+          child: Container(
+            width: widget.width ?? 40,
+            height: widget.height ?? 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(1000),
+              color: Color.fromARGB(255, 231, 229, 229)
+            ),
+          )
         ), 
       ),
     );
