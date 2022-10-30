@@ -1,6 +1,8 @@
 import 'package:agenda_eletronica/components/widget_loading.dart';
 import 'package:agenda_eletronica/providers/contact_provider.dart';
 import 'package:agenda_eletronica/screens/widget_common_screen.dart';
+import 'package:agenda_eletronica/services/ContactService.dart';
+import 'package:agenda_eletronica/services/CpfService.dart';
 import 'package:agenda_eletronica/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +34,9 @@ class HomeScreeState extends State<HomeScreen> with CommonComponent {
     });
 
     // DB().deleteAllDataBase();
+
+    // ContactService c = ContactService();
+    // c.generateContacts();
   }
 
   @override

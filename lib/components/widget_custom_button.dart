@@ -71,19 +71,23 @@ class CustomButtonState extends State<CustomButton> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        if (widget.onClick != null) {
-          widget.onClick!();
-        }
-      },
-      child: Container(
-        clipBehavior: Clip.antiAlias,
-        margin: widget.margin ?? const EdgeInsets.all(0),
-        decoration: BoxDecoration(
-          borderRadius: widget.borderRadius,
-          color: widget.backgroundColor
-        ),
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      margin: widget.margin ?? const EdgeInsets.all(0),
+      decoration: BoxDecoration(
+        borderRadius: widget.borderRadius,
+        color: widget.backgroundColor ?? Colors.transparent
+      ),
+      child: InkWell(
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        focusColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        onTap: () {
+          if (widget.onClick != null) {
+            widget.onClick!();
+          }
+        },
         child: Stack(
           children: [
             Container(

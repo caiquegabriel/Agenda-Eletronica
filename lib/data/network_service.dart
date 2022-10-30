@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http; 
 
 
-Future? callService(Uri uri, String method, String action, Map<String, dynamic> params) async {
+Future? callService(Uri uri, String method, Map<String, dynamic>? params, {bool jsonFormat = true, Map<String, String>? headers}) async {
   
   //Certificado para acesso sem HTTPS
   HttpClient client = HttpClient();
@@ -14,7 +14,7 @@ Future? callService(Uri uri, String method, String action, Map<String, dynamic> 
  
   http.Response? response;
 
-  const Map<String, String> headers = {
+  headers ??= {
     "content-type": "application/json"
   };
 
@@ -26,7 +26,8 @@ Future? callService(Uri uri, String method, String action, Map<String, dynamic> 
       try {
         response = await http.post(
           uri,
-          body: params
+          body: params,
+          headers: headers
         );
       } catch(e) { 
         hasError = true;
@@ -54,9 +55,10 @@ Future? callService(Uri uri, String method, String action, Map<String, dynamic> 
     
   try{ 
     if(response!.statusCode == 200) { 
-      return jsonDecode(response.body);
-    }  
-  } catch (e) { 
+      return jsonFormat ? jsonDecode(response.body) : response.body.toString();
+    }
+  } catch (e) {
+    debugPrint(e.toString());
     return null;
   }
 

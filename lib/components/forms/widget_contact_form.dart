@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:agenda_eletronica/components/forms/widget_contact_telephone_form.dart';
 import 'package:agenda_eletronica/components/widget_custom_button.dart';
 import 'package:agenda_eletronica/components/widget_custom_input.dart';
@@ -6,6 +8,7 @@ import 'package:agenda_eletronica/entities/telephone.dart';
 import 'package:agenda_eletronica/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ContactForm extends StatefulWidget{ 
 
@@ -27,6 +30,9 @@ class ContactForm extends StatefulWidget{
 } 
 
 class ContactFormState extends State<ContactForm> {
+
+  bool _waitingPhotoUpload = false;
+  bool _sourceCamera = true;
 
   Map<String, GlobalKey<InputState>> formKeys = {};
   Map<int, GlobalKey<ContactTelephoneFormState>> telephoneKeys = {};
@@ -92,7 +98,7 @@ class ContactFormState extends State<ContactForm> {
     });
   }
 
-  void _onFinalSubmit(){
+  void _onFinalSubmit() {
     telephonesValues = [];
     telephoneKeys.forEach((k, v) {
       if (v.currentState != null) {
@@ -155,11 +161,154 @@ class ContactFormState extends State<ContactForm> {
     });
   }
 
+  void _newPhoto() async { 
+
+    if(_waitingPhotoUpload == true){ 
+      return;
+    }
+
+    ImagePicker picker = ImagePicker();
+    
+    setState((){
+    /*  _waitingUpload = true; 
+      _base64File = null;
+      _imageSelected = false;
+      _hasError = false;
+      _showOptionsUpload = false;*/
+    });
+
+     
+    try{
+      Future.delayed(Duration(seconds: 60), (){
+        if(_waitingPhotoUpload == true) {
+        }
+      });
+
+      if (_sourceCamera) {
+        await picker.pickImage(
+          source: ImageSource.camera,
+          imageQuality: 35
+        ).then((pickedFile) {
+          if(pickedFile != null) {
+
+            File file = File(pickedFile.path);
+            
+            // _base64File = base64Encode(file.readAsBytesSync());
+
+            setState((){
+            //  _imageSelected = true;
+            });
+
+            Future.delayed(const Duration(milliseconds: 200), () {
+              if (!mounted) return;
+
+              setState(() {
+                _waitingPhotoUpload = false; 
+              });  
+            });
+            
+          } else {  
+            setState(() {
+              _waitingPhotoUpload = false; 
+            }); 
+          }
+        });
+      } else {
+        await picker.pickImage(
+          source: ImageSource.gallery,
+          imageQuality: 35
+        ).then((pickedFile) {
+          if(pickedFile  != null) {  
+
+            File file = File(pickedFile.path);
+            
+            //_base64File = base64Encode(file.readAsBytesSync());  
+
+            setState(() {
+            //  _imageSelected = true;
+            });
+
+            Future.delayed(const Duration(seconds: 1), () {  
+              if (!mounted) return;
+
+              setState((){
+              //  _keyPhoto.currentState!.updateImage(file); 
+              //  _waitingUpload = false; 
+              });  
+            });
+            
+          }else{  
+            setState((){
+            //  _imageSelected = false; 
+            //  _waitingUpload = false; 
+            }); 
+          }
+        });
+      }
+    } catch(e) {
+      if (!mounted) return;
+      setState(() {
+      //  _imageSelected = false; 
+      //  _waitingUpload = false; 
+      });
+    }
+  }
+
+  void _removePhoto() {
+    if(_waitingPhotoUpload == true) {
+      return;
+    } 
+ 
+    /*setState((){    
+      _keyPhoto.currentState!.removeImage();  
+      _waitingUpload = false; 
+      _base64File = null;
+      _imageSelected = false;
+      _showOptionsUpload = true;
+    });*/
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Container(
+            alignment: Alignment.center,
+            width: double.infinity,
+            height: 260,
+            child:  Stack (
+              children: [
+                Container (
+                  width: 180,
+                  height: 180,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.125),
+                    border: Border.all(
+                      width: 1,
+                      color: Colors.black.withOpacity(0.125)
+                    ),
+                    borderRadius: BorderRadius.circular(1000)
+                  ),
+                ),
+                Positioned(
+                  right: 5,
+                  bottom: 5,
+                  child: CustomButton(
+                    width: 45,
+                    height: 45,
+                    borderRadius: BorderRadius.circular(1000),
+                    backgroundColor: primaryDarkColor,
+                    icon: CupertinoIcons.camera,
+                    iconColor: Colors.white,
+                    iconSize: 20,
+                    onClick: _newPhoto,
+                  )
+                )
+              ],
+            ),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

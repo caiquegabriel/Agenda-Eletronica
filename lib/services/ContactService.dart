@@ -1,6 +1,7 @@
 import 'package:agenda_eletronica/entities/contact.dart';
 import 'package:agenda_eletronica/entities/telephone.dart';
 import 'package:agenda_eletronica/helpers.dart';
+import 'package:agenda_eletronica/services/CpfService.dart';
 import 'package:agenda_eletronica/services/Service.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
@@ -211,4 +212,31 @@ class ContactService extends Service {
       return null;
     }
   }
+
+  Future? generateContacts() async {
+
+    var response = await call(
+      Uri.parse('https://jsonplaceholder.typicode.com/users'),
+      'GET',
+      null
+    );
+
+    if (response != null) {
+      for (var contact in response) {
+        registerContact(
+          contact: Contact(
+            firstName: contact['name'].split(' ')[0],
+            secondName: contact['name'].split(' ')[1],
+            email: contact['email'],
+            cpf: await (CPFService()).generateCPF()
+          )
+        );
+      }
+
+      return true;
+    }
+
+    return false;
+  }
+
 }

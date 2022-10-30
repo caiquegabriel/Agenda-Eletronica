@@ -64,8 +64,25 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
     }
 
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white
+      height: 60,
+      margin: const EdgeInsets.only(
+        left: 5,
+        right: 5,
+        bottom: 5
+      ),
+      padding: const EdgeInsets.only(
+        left: 6,
+        right: 6,
+        top: 3.5,
+        bottom: 3.5,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(
+          width: 1,
+          color: Colors.grey
+        ),
+        borderRadius: BorderRadius.circular(5)
       ),
       child: Row(
         children: [
@@ -82,7 +99,7 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
             onClick: hideForm,
           ),
           Container(
-            height: 45,
+            height: 50,
             margin: const EdgeInsets.only(right: 7),
             width: 100,
             child: DropdownButton<String>(
@@ -115,7 +132,13 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
                     padding: const EdgeInsets.all(2.5),
                     height: 45,
                     width: 85,
-                    child: Text(value.toUpperCase()),
+                    child: Text(
+                      value.toUpperCase(),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400
+                      ),
+                    ),
                   )
                 );
               }).toList(),
@@ -125,7 +148,7 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
             child: Input(
               iconColor: Colors.grey,
               borderRadius: 5,
-              borderColor: Colors.black.withOpacity(0.125),
+              borderColor: Colors.transparent,
               borderWidth: 0.25,
               backgroundColor: const Color.fromRGBO(255, 255, 255,  0.95 ),
               focusNode: widget.inputFocus,
@@ -135,6 +158,7 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
               key: _inputKey,
               initialValue: widget.telephoneValue ?? "",
               validatorFunction: (){},
+              iconHeight: 35,
               height: 45,
               fontSize: 15,
               hintColor: Colors.black26,

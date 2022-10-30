@@ -70,6 +70,8 @@ class Input extends StatefulWidget{
 
   final double? iconSize;
 
+  final double? iconHeight;
+
   const Input({
     Key? key,
     this.mask,
@@ -90,6 +92,7 @@ class Input extends StatefulWidget{
     this.height,
     this.textWeight,
     this.borderWidth,
+    this.iconHeight,
     this.initialValue,
     this.textColor,
     this.borderColor,
@@ -169,7 +172,7 @@ class InputState extends State<Input>{
         right: 5
       ),
       decoration: BoxDecoration(
-        color: widget.backgroundColor ?? Colors.white,
+        color:  widget.backgroundColor ?? Colors.white,
         borderRadius: BorderRadius.circular(
           widget.borderRadius ?? 0
         ),
@@ -188,7 +191,7 @@ class InputState extends State<Input>{
                   color: Colors.transparent,
                   child: SizedBox(
                     width: 30,
-                    height: 30,
+                    height: widget.iconHeight ?? 30,
                     child: Icon(
                       widget.icon,
                       size: widget.iconSize ?? 15,
@@ -199,53 +202,58 @@ class InputState extends State<Input>{
             :
               const SizedBox.shrink(),
             Expanded(
-              child: TextFormField(
-                maxLines: widget.maxLines ?? 1,
-                keyboardType: widget.keyBoardType,
-                inputFormatters: widget.mask,
-                onChanged: (value){
-                  _currentLenght = value.length;
-                  if (value.length == widget.maxLength) {
-                    FocusScope.of(context).requestFocus(widget.nextFocus);
-                  } else if (widget.previousFocus != null && value.isEmpty) { 
-                    FocusScope.of(context).requestFocus(widget.previousFocus);
-                  }
-                },
-                buildCounter: (context, {required int currentLength, required bool isFocused, required int? maxLength}) {
-                  if (widget.nextFocus != null && maxLength != null && currentLength == maxLength) {
-                    //FocusScope.of(context).requestFocus(widget.nextFocus);
-                  }
-                },
-                maxLength: widget.maxLength,
-                focusNode: widget.focusNode,
-                textAlign: widget.textAlign ?? TextAlign.start,
-                controller:_inputController,
-                style: TextStyle(
-                  height: _currentLenght == 0 ? 1 : null,
-                  fontSize: widget.fontSize ?? 18,
-                  fontWeight: widget.textWeight ?? FontWeight.normal,
-                  letterSpacing: widget.letterSpacing,
-                  color: widget.textColor ?? const Color.fromRGBO(33, 33, 33, 1)
+              child: Container(
+                color: Colors.transparent,
+                child: TextFormField(
+                  maxLines: widget.maxLines ?? 1,
+                  keyboardType: widget.keyBoardType,
+                  inputFormatters: widget.mask,
+                  onChanged: (value){
+                    _currentLenght = value.length;
+                    if (value.length == widget.maxLength) {
+                      FocusScope.of(context).requestFocus(widget.nextFocus);
+                    } else if (widget.previousFocus != null && value.isEmpty) { 
+                      FocusScope.of(context).requestFocus(widget.previousFocus);
+                    }
+                  },
+                  buildCounter: (context, {required int currentLength, required bool isFocused, required int? maxLength}) {
+                    if (widget.nextFocus != null && maxLength != null && currentLength == maxLength) {
+                      //FocusScope.of(context).requestFocus(widget.nextFocus);
+                    }
+                  },
+                  maxLength: widget.maxLength,
+                  focusNode: widget.focusNode,
+                  textAlign: widget.textAlign ?? TextAlign.start,
+                  controller:_inputController,
+                  style: TextStyle(
+                    height: _currentLenght == 0 ? 1 : null,
+                    fontSize: widget.fontSize ?? 18,
+                    fontWeight: widget.textWeight ?? FontWeight.normal,
+                    letterSpacing: widget.letterSpacing,
+                    color: widget.textColor ?? const Color.fromRGBO(33, 33, 33, 1)
+                  ),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    labelText: widget.labelText,
+                    counterStyle: const TextStyle(height: 0, color: Colors.transparent),   
+                    hintText: widget.hintText ?? widget.labelText,
+                    hintStyle: TextStyle(height: 0, color: widget.hintColor ?? widget.borderColor, fontSize: widget.hintSize ?? 14),
+                    border: InputBorder.none,
+                    labelStyle: TextStyle(height: 0, fontWeight: FontWeight.normal, color: widget.labelColor ?? Colors.grey, fontSize: 15),
+                    errorStyle: const TextStyle(height: 0, color: Colors.transparent),   
+                  ),
+                  validator : (String? value) => widget.validatorFunction(value),
+                  obscureText: widget.obscureText, 
+                  onFieldSubmitted:(value){ 
+                    if(widget.formSubmitFunction == null) return; 
+                    widget.formSubmitFunction!(widget.key); 
+                  },
                 ),
-                decoration: InputDecoration(
-                  labelText: widget.labelText,
-                  counterStyle: const TextStyle(height: 0, color: Colors.transparent),   
-                  hintText: widget.hintText ?? widget.labelText,
-                  hintStyle: TextStyle(height: 0, color: widget.hintColor ?? widget.borderColor, fontSize: widget.hintSize ?? 14),
-                  border: InputBorder.none,
-                  labelStyle: TextStyle(height: 0, fontWeight: FontWeight.normal, color: widget.labelColor ?? Colors.grey, fontSize: 15),
-                  errorStyle: const TextStyle(height: 0, color: Colors.transparent),   
-                ),
-                validator : (String? value) => widget.validatorFunction(value),
-                obscureText: widget.obscureText, 
-                onFieldSubmitted:(value){ 
-                  if(widget.formSubmitFunction == null) return; 
-                  widget.formSubmitFunction!(widget.key); 
-                },
-              ),
-            )
-          ]
-        )
+              )
+          )
+        ]
+      )
     );
   }
 
