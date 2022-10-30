@@ -20,9 +20,8 @@ class LocalImageState extends State<LocalImage> {
   @override
   void initState() {
     super.initState();
-
     setState(() {
-      _image = widget.image;
+      _image = (widget.image.isEmpty) ? null : widget.image;
     });
   }
 
@@ -31,7 +30,7 @@ class LocalImageState extends State<LocalImage> {
     return Container(
       margin: widget.margin,
       child: Image.asset(
-        _image ?? "assets/images/loading.gif",
+        _image ?? "assets/images/default_avatar.png",
         fit: widget.fit,
         width: widget.width ?? double.infinity,
         height: widget.height

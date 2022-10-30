@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:agenda_eletronica/components/forms/widget_contact_telephone_form.dart';
+import 'package:agenda_eletronica/components/widget_contact_photo.dart';
 import 'package:agenda_eletronica/components/widget_custom_button.dart';
 import 'package:agenda_eletronica/components/widget_custom_input.dart';
 import 'package:agenda_eletronica/entities/contact.dart';
@@ -12,6 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ContactForm extends StatefulWidget{ 
 
@@ -35,7 +38,7 @@ class ContactForm extends StatefulWidget{
 class ContactFormState extends State<ContactForm> {
 
   bool _waitingPhotoUpload = false;
-  bool _sourceCamera = true;
+  String _imagePath = "";
 
   Map<String, GlobalKey<InputState>> formKeys = {};
   Map<int, GlobalKey<ContactTelephoneFormState>> telephoneKeys = {};
@@ -98,6 +101,7 @@ class ContactFormState extends State<ContactForm> {
     setState(() { 
       formFocus = formFocus;
       formKeys = formKeys;
+      _imagePath = widget.contact.photo ?? "";
     });
   }
 
@@ -169,7 +173,8 @@ class ContactFormState extends State<ContactForm> {
       secondName: secondName,
       email: email,
       cpf: cpf,
-      telephones: telephonesValues
+      telephones: telephonesValues,
+      photo: _imagePath
     );
 
     widget.onSubmit(contact).then((results) {
@@ -215,94 +220,43 @@ class ContactFormState extends State<ContactForm> {
 
   void _newPhoto() async { 
 
-    if(_waitingPhotoUpload == true){ 
+    if(_waitingPhotoUpload == true) {
       return;
     }
 
     ImagePicker picker = ImagePicker();
-    
-    setState((){
-    /*  _waitingUpload = true; 
-      _base64File = null;
-      _imageSelected = false;
-      _hasError = false;
-      _showOptionsUpload = false;*/
-    });
 
-     
     try{
       Future.delayed(Duration(seconds: 60), (){
         if(_waitingPhotoUpload == true) {
         }
       });
 
-      if (_sourceCamera) {
-        await picker.pickImage(
-          source: ImageSource.camera,
-          imageQuality: 35
-        ).then((pickedFile) {
-          if(pickedFile != null) {
+      await picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 35
+      ).then((pickedFile) async {
+        if(pickedFile != null) {
 
-            File file = File(pickedFile.path);
-            
-            // _base64File = base64Encode(file.readAsBytesSync());
-
-            setState((){
-            //  _imageSelected = true;
-            });
-
-            Future.delayed(const Duration(milliseconds: 200), () {
-              if (!mounted) return;
-
-              setState(() {
-                _waitingPhotoUpload = false; 
-              });  
-            });
-            
-          } else {  
-            setState(() {
-              _waitingPhotoUpload = false; 
-            }); 
+          /// Remover a foto anterior do usuário
+          if (widget.contact.photo != null) {
+            await File(widget.contact.photo!).absolute.delete();
           }
-        });
-      } else {
-        await picker.pickImage(
-          source: ImageSource.gallery,
-          imageQuality: 35
-        ).then((pickedFile) {
-          if(pickedFile  != null) {  
 
-            File file = File(pickedFile.path);
-            
-            //_base64File = base64Encode(file.readAsBytesSync());  
+          File file = File(pickedFile.path);
 
-            setState(() {
-            //  _imageSelected = true;
-            });
+          int radomId = Random().nextInt(20000000);
 
-            Future.delayed(const Duration(seconds: 1), () {  
-              if (!mounted) return;
+          final Directory directory = await getApplicationDocumentsDirectory();
+          final File newImage = await file.copy('${directory.path}/${widget.contact.id}_$radomId.png');
 
-              setState((){
-              //  _keyPhoto.currentState!.updateImage(file); 
-              //  _waitingUpload = false; 
-              });  
-            });
-            
-          }else{  
-            setState((){
-            //  _imageSelected = false; 
-            //  _waitingUpload = false; 
-            }); 
-          }
-        });
-      }
+          setState((){
+            _imagePath = '${directory.path}/${widget.contact.id}_$radomId.png';
+          });
+        }
+      });
     } catch(e) {
       if (!mounted) return;
-      setState(() {
-      //  _imageSelected = false; 
-      //  _waitingUpload = false; 
-      });
     }
   }
 
@@ -330,7 +284,7 @@ class ContactFormState extends State<ContactForm> {
             alignment: Alignment.center,
             width: double.infinity,
             height: 260,
-            child:  Stack (
+            child: Stack (
               children: [
                 Container (
                   width: 180,
@@ -342,6 +296,9 @@ class ContactFormState extends State<ContactForm> {
                       color: Colors.black.withOpacity(0.125)
                     ),
                     borderRadius: BorderRadius.circular(1000)
+                  ),
+                  child: ContactPhoto(
+                    avatar: _imagePath
                   ),
                 ),
                 Positioned(

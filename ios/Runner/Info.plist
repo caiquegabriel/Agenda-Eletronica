@@ -28,6 +28,10 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Esta ação permite fazer a submissão de images neste aplicativo.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Nosso app precisa dessa permissão para que você possa tirar e enviar fotos em nosso aplicativo.</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

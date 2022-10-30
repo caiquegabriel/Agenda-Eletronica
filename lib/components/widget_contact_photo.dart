@@ -1,3 +1,4 @@
+import 'package:agenda_eletronica/components/widget_local_image.dart';
 import 'package:flutter/material.dart';
 
 class ContactPhoto extends StatefulWidget {
@@ -55,7 +56,9 @@ class ContactPhotoState extends State<ContactPhoto> {
   @override
   void initState() {
     super.initState();  
-    _avatar = widget.avatar; 
+    setState(() {
+      _avatar = widget.avatar;
+    });
   }
 
   @override
@@ -87,15 +90,12 @@ class ContactPhotoState extends State<ContactPhoto> {
               widget.onClick!()
             }
           }),
-          child: Container(
+          child: LocalImage(
             width: widget.width ?? 40,
             height: widget.height ?? 40,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(1000),
-              color: Color.fromARGB(255, 231, 229, 229)
-            ),
+            image: _avatar!
           )
-        ), 
+        ),
       ),
     );
   }

@@ -23,7 +23,7 @@ class ContactView extends StatefulWidget {
 
 class ContactViewState extends State<ContactView> with CommonComponent {
 
-  Future onSubmit(Contact contact, {Uint8List? photo}) {
+  Future onSubmit(Contact contact) {
     return Modular.get<ContactProvider>().udpdateContact(contact);
   }
 
@@ -32,8 +32,8 @@ class ContactViewState extends State<ContactView> with CommonComponent {
       if (results == true) {
         customDialog(
           context,
-          title: "Usuário removido",
-          description: "O usuário ${widget.contact.firstName} foi removido.",
+          title: "Contato removido",
+          description: "O contato ${widget.contact.firstName} foi removido.",
           callback: () {
             navigatorPushNamed(context, '/');
           }

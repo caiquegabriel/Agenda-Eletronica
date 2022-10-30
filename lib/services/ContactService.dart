@@ -13,7 +13,7 @@ class ContactService extends Service {
   ///
   /// Cadastrar um novo contato
   ///
-  Future? registerContact({required Contact contact, String? photo}) async {
+  Future? registerContact({required Contact contact}) async {
     dynamic conn = await dbConn; 
 
     if(conn == null) {
@@ -28,7 +28,7 @@ class ContactService extends Service {
           contact.secondName ?? "",
           contact.email ?? "",
           contact.cpf ?? "",
-          ""
+          contact.photo
         ]
       );
 
@@ -128,7 +128,7 @@ class ContactService extends Service {
   ///
   /// Atualizar um contato
   ///
-  Future? updateContact({required Contact contact, String? photo}) async {
+  Future? updateContact({required Contact contact}) async {
     dynamic conn = await dbConn; 
 
     if(conn == null) {
@@ -143,7 +143,7 @@ class ContactService extends Service {
           contact.secondName ?? "",
           contact.email ?? "",
           contact.cpf ?? "",
-          "",
+          contact.photo,
           contact.id
         ]
       );
