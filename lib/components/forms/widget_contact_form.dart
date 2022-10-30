@@ -113,7 +113,7 @@ class ContactFormState extends State<ContactForm> {
     });
 
     Contact contact = Contact(
-      id: 0,
+      id: widget.contact.id ?? 0,
       firstName: formKeys['firstName']!.currentState!.inputController().text,
       secondName: formKeys['secondName']!.currentState!.inputController().text,
       email: formKeys['email']!.currentState!.inputController().text,
@@ -278,7 +278,7 @@ class ContactFormState extends State<ContactForm> {
             icon: CupertinoIcons.add,
             iconSize: 22,
             iconMargin: const EdgeInsets.only(right: 20),
-            text: "Registrar Contato",
+            text: widget.contact.id != null ? "Atualizar" : "Registrar",
             borderRadius: BorderRadius.circular(5),
             iconColor: Colors.white.withOpacity(0.5),
           )

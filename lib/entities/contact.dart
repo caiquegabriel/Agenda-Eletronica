@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:agenda_eletronica/entities/telephone.dart';
-import 'package:flutter/material.dart';
 
 class Contact {
 

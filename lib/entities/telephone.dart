@@ -3,25 +3,25 @@ class Telephone {
   int? _id;
   String? _telephone;
   String? _type;
-  int? _userId;
+  int? _contactId;
 
   Telephone ({
     int id = 0,
     required String telephone,
     required String type,
-    int userId = 0
+    int contactId = 0
   }) {
     _id = id;
     _telephone = telephone;
     _type = type;
-    _userId = 0;
+    _contactId = 0;
   }
 
   String? get telephone => _telephone;
 
   String? get type => _type;
 
-  int? get userId => _userId;
+  int? get contactId => _contactId;
 
   int? get id => _id;
 

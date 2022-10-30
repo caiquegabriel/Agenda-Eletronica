@@ -12,14 +12,17 @@ class ContactProvider extends ChangeNotifier {
 
   List<ContactPreview>? get contactPreviews => _contactPreviews;
 
+  List<Contact>? get contacts => _contacts;
+
   void populeContacts(List<Contact>? contacts) async {
-    _contacts ??= [];
+    _contacts = [];
 
     if (contacts == null) return;
 
     for (var contact in contacts) {
       _contacts!.add(contact);
     }
+    notifyListeners();
   }
 
   Future loadContacts() async {
@@ -28,13 +31,28 @@ class ContactProvider extends ChangeNotifier {
     });
   }
 
+  void removeContact(Contact contact) async {
+    await _contactService.removeContact(contact: contact);
+    loadContactPreviews();
+  }
+
+  void udpdateContact(Contact contact) async {
+    await _contactService.updateContact(contact: contact);
+    loadContactPreviews();
+  }
+
+  void register(Contact contact) async {
+    await _contactService.registerContact(contact: contact);
+    loadContactPreviews();
+  }
+
   void loadContactPreviews() async {
     List<Contact>? contacts = await _contactService.fetchContacts()!.then((results) {
       return results;
     });
 
     contacts ??= [];
-    _contactPreviews ??= [];
+    _contactPreviews = [];
 
     for (Contact contact in contacts) {
       _contactPreviews!.add(

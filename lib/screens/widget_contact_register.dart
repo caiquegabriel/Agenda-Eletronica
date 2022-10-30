@@ -1,5 +1,6 @@
 import 'package:agenda_eletronica/components/forms/widget_contact_form.dart';
 import 'package:agenda_eletronica/entities/contact.dart';
+import 'package:agenda_eletronica/providers/contact_provider.dart';
 import 'package:agenda_eletronica/screens/widget_common_screen.dart';
 import 'package:agenda_eletronica/services/ContactService.dart';
 import 'package:agenda_eletronica/style.dart';
@@ -17,16 +18,6 @@ class ContactRegister extends StatefulWidget {
 }
 
 class ContactRegisterState extends State<ContactRegister> with CommonComponent {
-
-  void onSubmit(Contact contact, {Uint8List? photo}) {
-    // Chamar Provider, Caique
-    debugPrint(contact.firstName.toString());
-    debugPrint(contact.secondName.toString());
-    debugPrint(contact.cpf.toString());
-    debugPrint(contact.email.toString());
-    debugPrint(contact.telephones.toString());
-    Modular.get<ContactService>().registerContact(contact: contact);
-  }
 
   @override
   void initState() {
@@ -46,7 +37,7 @@ class ContactRegisterState extends State<ContactRegister> with CommonComponent {
             child: ContactForm(
               contact: Contact(),
               feedback: () {},
-              onSubmit: onSubmit,
+              onSubmit: Modular.get<ContactProvider>().register,
             )
           )
         ]

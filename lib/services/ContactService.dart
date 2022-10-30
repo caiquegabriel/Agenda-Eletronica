@@ -20,7 +20,7 @@ class ContactService extends Service {
     }
 
     try {
-      final userId = await conn!.rawInsert(
+      final contactId = await conn!.rawInsert(
         'INSERT INTO contact(firstName, secondName, email, cpf, photo) VALUES(?, ?, ?, ?, ?)',
         [
           contact.firstName ?? "",
@@ -35,9 +35,9 @@ class ContactService extends Service {
         String telephone = getNumbers(t.telephone ?? "");
         String type =t.type ?? "residencial";
         await conn!.rawInsert(
-          'INSERT INTO telephone(userId, telephone, type) VALUES(?, ?, ?)',
+          'INSERT INTO telephone(contactId, telephone, type) VALUES(?, ?, ?)',
           [
-            userId,
+            contactId,
             telephone,
             type
           ]
@@ -61,7 +61,7 @@ class ContactService extends Service {
 
     try {
       List<Map> contacts = await conn!.rawQuery(
-        'SELECT * FROM contact'
+        'SELECT * FROM contact ORDER BY firstName ASC, secondName ASC'
       );
 
       List<Contact> contactsEntities = [];
@@ -83,19 +83,101 @@ class ContactService extends Service {
 
       return contactsEntities;
     } catch (e) {
-      debugPrint("OOOPs!");
       debugPrint(e.toString());
       return null;
     }
-
-
   }
 
   Future? fetchContactById() async {
 
   }
 
-  Future? fetchTelephonesByUserId(int userId) async {
+  ///
+  /// Apagar um contato
+  ///
+  Future? removeContact({required Contact contact}) async {
+    dynamic conn = await dbConn; 
+
+    if(conn == null) {
+      return null;
+    }
+
+    try {
+      await conn!.rawInsert(
+        'DELETE FROM contact WHERE id = ?',
+        [
+          contact.id
+        ]
+      );
+
+      /// Remoção de todos os relefones do usuário
+      await conn!.rawInsert(
+        'DELETE FROM telephone WHERE contactId = ?',
+        [
+          contact.id
+        ]
+      );
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+
+  ///
+  /// Atualizar um contato
+  ///
+  Future? updateContact({required Contact contact, String? photo}) async {
+    dynamic conn = await dbConn; 
+
+    if(conn == null) {
+      return null;
+    }
+
+    try {
+      await conn!.rawInsert(
+        'UPDATE contact SET firstName = ?, secondName = ?, email = ?, cpf = ?, photo  = ? WHERE id = ?',
+        [
+          contact.firstName ??  "",
+          contact.secondName ?? "",
+          contact.email ?? "",
+          contact.cpf ?? "",
+          "",
+          contact.id
+        ]
+      );
+
+      ///
+      /// Antes, será feito a remoção de todos os relefones do usuário
+      /// Para depois atualizar adicionando os novos telefones
+      ///
+      await conn!.rawInsert(
+        'DELETE FROM telephone WHERE contactId = ?',
+        [
+          contact.id
+        ]
+      );
+
+      for (Telephone t in contact.telephones) {
+        String telephone = getNumbers(t.telephone ?? "");
+        String type =t.type ?? "residencial";
+        await conn!.rawInsert(
+          'INSERT INTO telephone(contactId, telephone, type) VALUES(?, ?, ?)',
+          [
+            contact.id,
+            telephone,
+            type
+          ]
+        );
+      }
+
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future? fetchTelephonesByUserId(int contactId) async {
 
     dynamic conn = await dbConn;
 
@@ -105,8 +187,8 @@ class ContactService extends Service {
 
     try {
       List<Map> telephones = await conn!.rawQuery(
-        'SELECT * FROM telephone WHERE userId = ?',
-        [userId]
+        'SELECT * FROM telephone WHERE contactId = ?',
+        [contactId]
       );
 
       List<Telephone> telephonesList = [];
@@ -117,7 +199,7 @@ class ContactService extends Service {
             id: telephone['id'],
             telephone: telephone['telephone'],
             type: telephone['type'],
-            userId: telephone['userId']
+            contactId: telephone['contactId']
           )
         );
       }

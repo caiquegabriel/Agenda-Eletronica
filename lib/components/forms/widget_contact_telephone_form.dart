@@ -34,6 +34,15 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      _telephoneType = widget.typeValue ?? "trabalho";
+    });
+  }
+
   bool get enabled => _enabled;
 
   Map<String, dynamic> getValue() {
@@ -63,11 +72,11 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
           CustomButton(
             borderRadius: BorderRadius.circular(100),
             margin: const EdgeInsets.only(left: 3.5, right: 3.5),
-            width: 25,
-            height: 25,
+            width: 17,
+            height: 17,
             backgroundColor: Colors.red,
             fontSize: 13,
-            iconSize: 12,
+            iconSize: 11,
             iconColor: Colors.white,
             icon: CupertinoIcons.minus,
             onClick: hideForm,
@@ -77,7 +86,7 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
             margin: const EdgeInsets.only(right: 7),
             width: 100,
             child: DropdownButton<String>(
-              value: widget.typeValue ?? "trabalho",
+              value: _telephoneType,
               underline: Container(
                 height: 1,
                 color: Colors.transparent,
