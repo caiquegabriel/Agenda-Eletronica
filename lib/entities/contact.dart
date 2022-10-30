@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:agenda_eletronica/entities/telephone.dart';
 import 'package:flutter/material.dart';
 
@@ -12,11 +14,11 @@ class Contact {
   List<Telephone> _telephones = [];
 
   Contact ({
-    required int id,
-    required String firstName,
-    required String secondName,
-    required String email,
-    required String cpf,
+    int? id,
+    String? firstName,
+    String? secondName,
+    String? email,
+    String? cpf,
     String photo = "",
     List<Telephone> telephones = const <Telephone>[]
   }) {
@@ -54,5 +56,14 @@ class Contact {
 
     return principalTelephone;
   }
+
+  Map<String, dynamic> toJson() => {
+    'firstName' : _firstName ?? "",
+    'email' : _email ?? "",
+    'secondName' : _secondName ?? "",
+    'cpf': _cpf ?? "",
+    'id' : _id ?? 0,
+    'telephone' : const JsonEncoder().convert(_telephones)
+  };
 
 }

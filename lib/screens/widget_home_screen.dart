@@ -1,9 +1,6 @@
-import 'package:agenda_eletronica/components/widget_contact_preview.dart';
 import 'package:agenda_eletronica/components/widget_loading.dart';
-import 'package:agenda_eletronica/entities/contact.dart';
 import 'package:agenda_eletronica/providers/contact_provider.dart';
 import 'package:agenda_eletronica/screens/widget_common_screen.dart';
-import 'package:agenda_eletronica/services/ContactService.dart';
 import 'package:agenda_eletronica/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -22,14 +19,11 @@ class HomeScreeState extends State<HomeScreen> with CommonComponent {
 
   ContactProvider contactProvider = Modular.get<ContactProvider>();
 
-  List<ContactPreview> _contacts = [];
-
   @override
   void initState() {
     super.initState();
 
     Future.delayed(const Duration(seconds: 2), () {
-      debugPrint("Lendo contatos");
       contactProvider.loadContactPreviews();
     });
   }

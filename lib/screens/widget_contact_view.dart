@@ -7,16 +7,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class ContactRegister extends StatefulWidget {
+class ContactView extends StatefulWidget {
 
-  const ContactRegister ({Key? key}) : super(key: key);
+  final Contact contact;
+
+  const ContactView ({Key? key, required this.contact}) : super(key: key);
 
   @override
-  ContactRegisterState createState() => ContactRegisterState();
+  ContactViewState createState() => ContactViewState();
 
 }
 
-class ContactRegisterState extends State<ContactRegister> with CommonComponent {
+class ContactViewState extends State<ContactView> with CommonComponent {
 
   void onSubmit(Contact contact, {Uint8List? photo}) {
     // Chamar Provider, Caique
@@ -31,20 +33,19 @@ class ContactRegisterState extends State<ContactRegister> with CommonComponent {
   @override
   void initState() {
     super.initState();
-    // (DB()).deleteAllDataBase();
   }
 
   @override
   Widget build(BuildContext context) {
     return content(
       enableBackButton: true,
-      title: "Novo Contato",
+      title:"${widget.contact.firstName} ${widget.contact.secondName}",
       child: ListView(
         padding: noEdgeInsets,
         children: [
           Container(
             child: ContactForm(
-              contact: Contact(),
+              contact: widget.contact,
               feedback: () {},
               onSubmit: onSubmit,
             )

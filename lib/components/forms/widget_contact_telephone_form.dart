@@ -5,11 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ContactTelephoneForm extends StatefulWidget {
+
   final FocusNode? inputFocus;
-  final String? initialValue;
+  final String? telephoneValue;
+  final String? typeValue;
   final Function? toNext;
 
-  const ContactTelephoneForm({super.key, this.inputFocus, this.toNext, this.initialValue});
+  const ContactTelephoneForm({super.key, this.inputFocus, this.toNext, this.telephoneValue, this.typeValue});
 
   @override
   ContactTelephoneFormState createState() => ContactTelephoneFormState();
@@ -19,8 +21,6 @@ class ContactTelephoneForm extends StatefulWidget {
 class ContactTelephoneFormState extends State<ContactTelephoneForm> {
 
   String _telephoneType = "trabalho";
-
-  String? _telephone;
 
   bool _enabled = true;
 
@@ -55,7 +55,7 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
     }
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white
       ),
       child: Row(
@@ -77,7 +77,7 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
             margin: const EdgeInsets.only(right: 7),
             width: 100,
             child: DropdownButton<String>(
-              value: "trabalho",
+              value: widget.typeValue ?? "trabalho",
               underline: Container(
                 height: 1,
                 color: Colors.transparent,
@@ -124,7 +124,7 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
               textWeight: FontWeight.w600,
               formSubmitFunction: widget.toNext,
               key: _inputKey,
-              initialValue: widget.initialValue == null ? "" : widget.initialValue!,
+              initialValue: widget.telephoneValue ?? "",
               validatorFunction: (){},
               height: 45,
               fontSize: 15,

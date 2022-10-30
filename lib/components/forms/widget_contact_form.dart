@@ -13,11 +13,11 @@ class ContactForm extends StatefulWidget{
 
   final Function feedback;
 
-  final Map<String, dynamic>? initialValue; 
+  final Contact contact; 
 
   const ContactForm({
     Key? key,
-    this.initialValue,
+    required this.contact,
     required this.feedback,
     required this.onSubmit
   }) : super(key: key);
@@ -36,8 +36,16 @@ class ContactFormState extends State<ContactForm> {
   List<ContactTelephoneForm> _telephonesForms = [];
 
   List<Telephone> telephonesValues = [];
+
+  void _loadTelephones() {
+    if (widget.contact.telephones.isEmpty || !mounted) return;
+
+    for (Telephone t in widget.contact.telephones) {
+      _addTelephoneForm(telephone: t);
+    }
+  }
  
-  void _addTelephoneForm() {
+  void _addTelephoneForm({Telephone? telephone}) {
     if (!mounted) return;
 
     GlobalKey formKey = telephoneKeys[telephoneKeys.length] = GlobalKey();
@@ -49,7 +57,8 @@ class ContactFormState extends State<ContactForm> {
           key: formKey,
           inputFocus: inputFocus,
           toNext: toNext,
-          initialValue: "(00) 0 0000-0000",
+          telephoneValue: (telephone != null) ? telephone.telephone ?? "" : "",
+          typeValue: (telephone != null) ? telephone.type ?? "trabalho" : "trabalho",
         )
       );
     });
@@ -58,6 +67,8 @@ class ContactFormState extends State<ContactForm> {
   @override
   void initState() {
     super.initState();
+
+    _loadTelephones();
 
     formKeys = { 
       'email' : GlobalKey(),
@@ -162,14 +173,14 @@ class ContactFormState extends State<ContactForm> {
                   textColor: Colors.black54,
                   formSubmitFunction: toNext,
                   key: formKeys['firstName'],
-                  initialValue: widget.initialValue == null ? "" : widget.initialValue!['email'],
+                  initialValue: widget.contact.firstName ?? "",
                   validatorFunction: (){ },
                   labelColor: Colors.black38,
                   height: 50,
                   hintColor: Colors.black26,
                   icon: CupertinoIcons.person,
                   margin: const EdgeInsets.only(right: 5, top: 5, bottom: 5),
-                  hintText: "Caique"
+                  hintText: "Primeiro Nome"
                 ),
               ),
               Expanded(
@@ -182,7 +193,7 @@ class ContactFormState extends State<ContactForm> {
                   textColor: Colors.black54,
                   formSubmitFunction: toNext,
                   key: formKeys['secondName'],
-                  initialValue: widget.initialValue == null ? "" : widget.initialValue!['email'],
+                  initialValue: widget.contact.secondName ?? "",
                   validatorFunction: (){ },
                   labelColor: Colors.black38,
                   height: 50,
@@ -206,7 +217,7 @@ class ContactFormState extends State<ContactForm> {
                 textColor: Colors.black54,
                 formSubmitFunction: toNext,
                 key: formKeys['cpf'],
-                initialValue: widget.initialValue == null ? "" : widget.initialValue!['email'],
+                initialValue: widget.contact.cpf ?? "",
                 validatorFunction: (){ },
                 labelColor: Colors.black38,
                 height: 50,
@@ -224,7 +235,7 @@ class ContactFormState extends State<ContactForm> {
                 textColor: Colors.black54,
                 formSubmitFunction: toNext,
                 key: formKeys['email'],
-                initialValue: widget.initialValue == null ? "" : widget.initialValue!['email'],
+                initialValue: widget.contact.email ?? "",
                 validatorFunction: (){ },
                 labelColor: Colors.black38,
                 height: 50,
