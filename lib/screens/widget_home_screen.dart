@@ -1,8 +1,7 @@
 import 'package:agenda_eletronica/components/widget_loading.dart';
+import 'package:agenda_eletronica/data/local.dart';
 import 'package:agenda_eletronica/providers/contact_provider.dart';
 import 'package:agenda_eletronica/screens/widget_common_screen.dart';
-import 'package:agenda_eletronica/services/ContactService.dart';
-import 'package:agenda_eletronica/services/CpfService.dart';
 import 'package:agenda_eletronica/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,18 +24,20 @@ class HomeScreeState extends State<HomeScreen> with CommonComponent {
 
   ContactProvider contactProvider = Modular.get<ContactProvider>();
 
+  Future _loadPreviews() async {
+    String firstInitialization = await (Modular.get<Local>()).getString('app2_name');
+    if (firstInitialization.isEmpty) {
+      // (Modular.get<Local>()).setString('app_name', 'Agenda Eletronica');
+      // await contactProvider.generateUsers();
+    }
+
+    contactProvider.loadContactPreviews();
+  }
+
   @override
   void initState() {
     super.initState();
-
-    Future.delayed(const Duration(seconds: 2), () {
-      contactProvider.loadContactPreviews();
-    });
-
-    // DB().deleteAllDataBase();
-
-    // ContactService c = ContactService();
-    // c.generateContacts();
+    _loadPreviews();
   }
 
   @override
@@ -47,11 +48,15 @@ class HomeScreeState extends State<HomeScreen> with CommonComponent {
         height: 45,
         icon: CupertinoIcons.add,
         iconSize: 25,
+        textColor: primaryColor,
+        iconColor: primaryColor,
         onClick: () {
           navigatorPushNamed(context, '/contact_register');
         },
       ),
-      child: ChangeNotifierProvider(
+      child: Container(
+        margin: noEdgeInsets,
+        child: ChangeNotifierProvider(
           create: (BuildContext context) => contactProvider,
           child: Consumer<ContactProvider>(
             builder: (context, value, _) {
@@ -64,12 +69,31 @@ class HomeScreeState extends State<HomeScreen> with CommonComponent {
                 );
               } else if (value.contactPreviews!.isEmpty) {
                 return Container(
+                  padding: const EdgeInsets.all(15),
                   alignment: Alignment.center,
-                  child: Text(
-                    "Nenhum contato.",
-                    style: TextStyle(
-                      fontSize: 17.6,
-                      color: Colors.grey,
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      style: TextStyle(
+                        color: Colors.black
+                      ),
+                      children: [
+                        TextSpan(
+                          text: "Agenda Vazia :(",
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold
+                          )
+                        ),
+                        TextSpan(
+                          text: '\nPara adicionar um contato, clique no botão "+"',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w200,
+                            color: Colors.black87
+                          )
+                        )
+                      ]
                     )
                   )
                 );
@@ -82,6 +106,7 @@ class HomeScreeState extends State<HomeScreen> with CommonComponent {
             }
           )
         )
+      )
     );
   }
 }

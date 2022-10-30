@@ -4,6 +4,7 @@ import 'package:agenda_eletronica/services/ContactService.dart';
 import 'package:flutter/material.dart';
 
 class ContactProvider extends ChangeNotifier {
+
   final ContactService _contactService = ContactService();
 
   List<Contact>? _contacts;
@@ -61,6 +62,15 @@ class ContactProvider extends ChangeNotifier {
         )
       );
     }
+
     notifyListeners();
+  }
+
+  Future generateUsers() async {
+    _contactService.generateContacts()!.then((results) {
+      if (results == true) {
+        loadContactPreviews();
+      }
+    });
   }
 }

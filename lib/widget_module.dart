@@ -1,3 +1,4 @@
+import 'package:agenda_eletronica/data/local.dart';
 import 'package:agenda_eletronica/providers/contact_provider.dart';
 import 'package:agenda_eletronica/screens/widget_contact_register.dart';
 import 'package:agenda_eletronica/screens/widget_contact_view.dart';
@@ -12,6 +13,7 @@ class AppModule extends Module {
   List<Bind> get binds => [
     Bind((i) => ContactService(), isSingleton: true),
     Bind((i) => ContactProvider(), isSingleton: true),
+    Bind((i) => Local(), isSingleton: true)
   ];
 
   /// rotas do módulo 

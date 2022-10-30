@@ -33,12 +33,10 @@ class ContactRegisterState extends State<ContactRegister> with CommonComponent {
       child: ListView(
         padding: noEdgeInsets,
         children: [
-          Container(
-            child: ContactForm(
-              contact: Contact(),
-              feedback: () {},
-              onSubmit: Modular.get<ContactProvider>().register,
-            )
+          ContactForm(
+            contact: Contact(),
+            feedback: () {},
+            onSubmit: Modular.get<ContactProvider>().register,
           )
         ]
       )

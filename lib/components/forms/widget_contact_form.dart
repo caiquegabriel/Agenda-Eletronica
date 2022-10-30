@@ -417,19 +417,28 @@ class ContactFormState extends State<ContactForm> {
           Column(
             children: _telephonesForms,
           ),
-          CustomButton(
-            margin: const EdgeInsets.all(5),
-            onClick: _onFinalSubmit,
-            height: 45,
-            backgroundColor: primaryColor,
-            fontSize: 16,
-            textColor: Colors.white,
-            icon: CupertinoIcons.add,
-            iconSize: 22,
-            iconMargin: const EdgeInsets.only(right: 20),
-            text: widget.contact.id != null ? "Atualizar" : "Registrar",
-            borderRadius: BorderRadius.circular(5),
-            iconColor: Colors.white.withOpacity(0.5),
+          Container(
+            margin: const EdgeInsets.only(top: 30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CustomButton(
+                  width: 200,
+                  margin: const EdgeInsets.all(5),
+                  onClick: _onFinalSubmit,
+                  height: 45,
+                  backgroundColor: primaryColor,
+                  fontSize: 16,
+                  textColor: Colors.white,
+                  icon: CupertinoIcons.add,
+                  iconSize: 22,
+                  iconMargin: const EdgeInsets.only(right: 20),
+                  text: widget.contact.id != null ? "Atualizar" : "Salvar Contato",
+                  borderRadius: BorderRadius.circular(5),
+                  iconColor: Colors.white.withOpacity(0.5),
+                )
+              ],
+            )
           )
         ],
       );

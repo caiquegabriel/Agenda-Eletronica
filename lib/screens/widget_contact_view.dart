@@ -47,6 +47,8 @@ class ContactViewState extends State<ContactView> with CommonComponent {
         icon: CupertinoIcons.trash,
         iconSize: 25,
         onClick: onRemove,
+        textColor: primaryColor,
+        iconColor: primaryColor,
       ),
       title:"${widget.contact.firstName} ${widget.contact.secondName}",
       child: ListView(

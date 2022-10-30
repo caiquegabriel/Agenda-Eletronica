@@ -24,7 +24,7 @@ class TemplateHeaderState extends State<TemplateHeader> {
       padding: const EdgeInsets.all(7.5),
       height: headerHeight + MediaQuery.of(context).padding.top,
       decoration: BoxDecoration(
-        color: primaryColor,
+        color: Colors.white,
         border: Border(
           bottom: BorderSide(
             width: 1,
@@ -36,6 +36,7 @@ class TemplateHeaderState extends State<TemplateHeader> {
         top: true,
         bottom: false,
         child: Container(
+          margin: noEdgeInsets,
           height: double.infinity,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -47,6 +48,8 @@ class TemplateHeaderState extends State<TemplateHeader> {
                   width: 45,
                   height: 45,
                   icon: CupertinoIcons.back,
+                  textColor: primaryColor,
+                  iconColor: primaryColor,
                   iconSize: 25,
                   onClick: () {
                     Navigator.of(context).pop();
@@ -57,6 +60,8 @@ class TemplateHeaderState extends State<TemplateHeader> {
                   width: 45,
                   height: 45,
                   icon: CupertinoIcons.search,
+                  textColor: primaryColor,
+                  iconColor: primaryColor,
                   iconSize: 25,
                 ),
               Expanded(
