@@ -9,14 +9,19 @@ class LocalImage extends StatefulWidget {
   final double? height;
   final BoxFit? fit;
 
-  const LocalImage ({super.key, this.margin, required this.image, this.width, this.height, this.fit});
+  const LocalImage(
+      {super.key,
+      this.margin,
+      required this.image,
+      this.width,
+      this.height,
+      this.fit});
 
   @override
   LocalImageState createState() => LocalImageState();
 }
 
 class LocalImageState extends State<LocalImage> {
-
   String? _image;
 
   void updateImage(String? image) {
@@ -43,14 +48,19 @@ class LocalImageState extends State<LocalImage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_image == null || _image!.isEmpty) {
+      return Container(
+          margin: widget.margin,
+          child: Image.asset(("assets/images/default_avatar.png"),
+              fit: widget.fit,
+              width: widget.width ?? double.infinity,
+              height: widget.height));
+    }
     return Container(
-      margin: widget.margin,
-      child: Image.asset(
-        _image ?? "assets/images/default_avatar.png",
-        fit: widget.fit,
-        width: widget.width ?? double.infinity,
-        height: widget.height
-      )
-    );
+        margin: widget.margin,
+        child: Image.file(File(_image ?? "assets/images/default_avatar.png"),
+            fit: widget.fit,
+            width: widget.width ?? double.infinity,
+            height: widget.height));
   }
 }

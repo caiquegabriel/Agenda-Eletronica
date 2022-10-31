@@ -225,7 +225,7 @@ class ContactService extends Service {
       for (var contact in response) {
         List name = contact['name'].split(' ');
         String firstName = name[0];
-        String secondName = name[0];
+        String secondName = name[1];
 
         await registerContact(
           contact: Contact(
