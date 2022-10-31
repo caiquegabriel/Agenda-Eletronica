@@ -117,9 +117,7 @@ class Input extends StatefulWidget{
 
 class InputState extends State<Input>{  
 
-  final TextEditingController _inputController = TextEditingController(); 
-
-  bool _fieldUpdated = false;
+  final TextEditingController _inputController = TextEditingController();
 
   int _currentLenght = 0;
 

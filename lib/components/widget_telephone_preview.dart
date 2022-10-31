@@ -24,9 +24,7 @@ class TelephonePreviewState extends State<TelephonePreview> {
       height: 65,
       alignment: Alignment.centerLeft,
       clipBehavior: Clip.antiAlias,
-      padding: const EdgeInsets.all(
-        10
-      ),
+      padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.all(5),
       decoration: BoxDecoration(
         color: Colors.white,

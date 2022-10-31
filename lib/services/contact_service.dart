@@ -51,6 +51,9 @@ class ContactService extends Service {
     return null;
   }
 
+  ///
+  /// Pegar contatos
+  ///
   Future? fetchContacts() async {
     dynamic conn = await dbConn;
 
@@ -66,7 +69,7 @@ class ContactService extends Service {
       List<Contact> contactsEntities = [];
      
       for (var contact in contacts) {
-        List<Telephone>? telephones = await fetchTelephonesByUserId(contact['id']);
+        List<Telephone>? telephones = await fetchTelephonesByContactId(contact['id']);
         contactsEntities.add(
           Contact(
             id: contact['id'],
@@ -85,10 +88,6 @@ class ContactService extends Service {
       debugPrint(e.toString());
       return null;
     }
-  }
-
-  Future? fetchContactById() async {
-
   }
 
   ///
@@ -121,7 +120,6 @@ class ContactService extends Service {
       debugPrint(e.toString());
     }
   }
-
 
   ///
   /// Atualizar um contato
@@ -172,11 +170,14 @@ class ContactService extends Service {
 
       return true;
     } catch (e) {
-      debugPrint(e.toString());
+      return null;
     }
   }
 
-  Future? fetchTelephonesByUserId(int contactId) async {
+  ///
+  /// Pegar telefones para determinado contato
+  ///
+  Future? fetchTelephonesByContactId(int contactId) async {
 
     dynamic conn = await dbConn;
 
@@ -205,12 +206,13 @@ class ContactService extends Service {
 
       return telephonesList;
     } catch (e) {
-      debugPrint("OOOPs!");
-      debugPrint(e.toString());
       return null;
     }
   }
 
+  ///
+  /// Gera os contatos para o primeiro acesso
+  ///
   Future? generateContacts() async {
 
     var response = await call(
@@ -221,7 +223,7 @@ class ContactService extends Service {
 
     if (response != null) {
       for (var contact in response) {
-        registerContact(
+        await registerContact(
           contact: Contact(
             firstName: contact['name'].split(' ')[0],
             secondName: contact['name'].split(' ')[1],
@@ -236,5 +238,4 @@ class ContactService extends Service {
 
     return false;
   }
-
 }

@@ -45,14 +45,12 @@ class ContactProvider extends ChangeNotifier {
     _contactPreviews = [];
 
     for (Contact contact in contacts) {
-      // final GlobalKey<ContactPreviewState> contactKey = GlobalKey();
       _contactPreviews!.add(
         ContactPreview(
           contact: contact
         )
       );
     }
-
     notifyListeners();
   }
 

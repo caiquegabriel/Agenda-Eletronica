@@ -94,7 +94,7 @@ class ContactPreviewState extends State<ContactPreview> {
                         ),
                         Expanded(
                           child: Text(
-                              widget.contact.principalTelephone() ?? "Não disponível",
+                              widget.contact.principalTelephone() != null ? maskTelephone(widget.contact.principalTelephone()) : "Não disponível",
                               maxLines: 1,
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 24, 24, 24),
@@ -110,14 +110,6 @@ class ContactPreviewState extends State<ContactPreview> {
                 ),
               )
             ),
-            Container(
-              width: 120,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.circular(100)
-              ),
-            )
           ],
         ),
       )

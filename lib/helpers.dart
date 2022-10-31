@@ -37,8 +37,10 @@ String maskTelephone(String? telephone) {
   if (telephone == null) return "";
 
   MaskTextInputFormatter telephoneMask = MaskTextInputFormatter(
-    mask: '(##) # ####-####', 
-    filter: { "#": RegExp(r'[0-9]') },
+    mask: '## # ####-####', 
+    filter: {
+      "#": RegExp(r'[0-9]')
+    },
   );
 
   return telephoneMask.maskText(telephone);
@@ -58,8 +60,6 @@ String maskCPF(String? cpf) {
 ///
 /// Dialogos
 ///
-
-
 Future<void> customDialog(context, {required String title, required String description, Function? callback, bool? showCancelButton}) async {
     return showDialog<void>(
       context: context,

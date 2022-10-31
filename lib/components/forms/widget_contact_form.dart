@@ -34,19 +34,26 @@ class ContactForm extends StatefulWidget{
 
 class ContactFormState extends State<ContactForm> {
 
+  /// Localização da foto do contato
   String _imagePath = "";
-
   GlobalKey<ContactPhotoState> contactPhotoKey = GlobalKey();
 
+  /// Chaves do formulário
   Map<String, GlobalKey<InputState>> formKeys = {};
-  Map<int, GlobalKey<ContactTelephoneFormState>> telephoneKeys = {};
+
   Map<int, FocusNode> telephoneFocus = {};
   Map<String, FocusNode > formFocus = {};
 
+  /// Chaves do formulário dos telefones
+  Map<int, GlobalKey<ContactTelephoneFormState>> telephoneFormKeys = {};
+
+  /// Formulários do telefones
   final List<ContactTelephoneForm> _telephonesForms = [];
 
+  /// Valores dos telefones
   List<Telephone> telephonesValues = [];
 
+  /// Máscara do CPF
   MaskTextInputFormatter? _maskCPF;
 
   void _loadTelephones() {
@@ -60,8 +67,8 @@ class ContactFormState extends State<ContactForm> {
   void _addTelephoneForm({Telephone? telephone}) {
     if (!mounted) return;
 
-    GlobalKey formKey = telephoneKeys[telephoneKeys.length] = GlobalKey();
-    FocusNode inputFocus = telephoneFocus[telephoneKeys.length] = FocusNode();
+    GlobalKey formKey = telephoneFormKeys[telephoneFormKeys.length] = GlobalKey();
+    FocusNode inputFocus = telephoneFocus[telephoneFormKeys.length] = FocusNode();
 
     setState(() {
       _telephonesForms.add(
@@ -148,19 +155,27 @@ class ContactFormState extends State<ContactForm> {
     }
 
     telephonesValues = [];
-    telephoneKeys.forEach((k, v) {
+    telephoneFormKeys.forEach((k, v) {
       if (v.currentState != null) {
         if (v.currentState!.enabled) {
           Map value = v.currentState!.getValue();
           if (value['telephone'] != null && value['telephone'].isNotEmpty) {
+            value['telephone'] = getNumbers(value['telephone']);
+            if (value['telephone'].split('').length < 8) {
+              customDialog(
+                context,
+                title: "Algum telefone da lista é inválido.",
+                description: "O telefone tem que ter pelo menos 8 números."
+              );
+              telephonesValues = [];
+              return;
+            }
             telephonesValues.add(
               Telephone(
                 type: value['type'],
                 telephone: value['telephone'],
               )
             );
-          } else {
-            // Erro no estado do input
           }
         }
       }
