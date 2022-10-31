@@ -105,7 +105,6 @@ class HomeScreeState extends State<HomeScreen> with CommonComponent, AutomaticKe
                 );
               } else {
                 return ListView(
-                  key: GlobalKey(),
                   padding: noEdgeInsets,
                   children: value.contactPreviews!
                 );

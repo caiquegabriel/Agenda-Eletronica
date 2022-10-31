@@ -101,4 +101,9 @@ class ContactPhotoState extends State<ContactPhoto> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

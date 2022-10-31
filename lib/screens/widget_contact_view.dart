@@ -116,4 +116,9 @@ class ContactViewState extends State<ContactView> with CommonComponent, Automati
       )
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }
