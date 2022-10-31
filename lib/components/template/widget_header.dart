@@ -1,4 +1,5 @@
 import 'package:agenda_eletronica/components/widget_custom_button.dart';
+import 'package:agenda_eletronica/helpers.dart';
 import 'package:agenda_eletronica/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +7,14 @@ import 'package:flutter/material.dart';
 class TemplateHeader extends StatefulWidget {
 
   final String? title;
+
   final bool? enableBackButton;
+
   final CustomButton? rightButton;
 
-  const TemplateHeader ({super.key, this.title, this.enableBackButton, this.rightButton});
+  final String? backButtonRoute;
+
+  const TemplateHeader ({super.key, this.title, this.enableBackButton, this.rightButton, this.backButtonRoute});
 
   @override
   TemplateHeaderState createState() => TemplateHeaderState();
@@ -52,7 +57,11 @@ class TemplateHeaderState extends State<TemplateHeader> {
                   iconColor: primaryColor,
                   iconSize: 25,
                   onClick: () {
-                    Navigator.of(context).pop();
+                    if (widget.backButtonRoute == null) {
+                      Navigator.of(context).pop();
+                    } else {
+                      navigatorPushNamed(context, widget.backButtonRoute!);
+                    }
                   },
                 )
               :

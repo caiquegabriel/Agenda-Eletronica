@@ -28,9 +28,9 @@ class HomeScreeState extends State<HomeScreen> with CommonComponent, AutomaticKe
   ContactProvider contactProvider = Modular.get<ContactProvider>();
 
   Future _loadPreviews() async {
-    String firstInitialization = await (Modular.get<Local>()).getString('appagendaeletronica6');
+    String firstInitialization = await (Modular.get<Local>()).getString('appagendaeletronica12');
     if (firstInitialization.isEmpty) {
-      (Modular.get<Local>()).setString('appagendaeletronica6', 'Agenda Eletronica');
+      (Modular.get<Local>()).setString('appagendaeletronica12', 'Agenda Eletronica');
       await contactProvider.generateUsers();
     }
     contactProvider.loadContactPreviews();

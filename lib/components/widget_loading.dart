@@ -1,13 +1,15 @@
 import 'package:agenda_eletronica/components/widget_local_image.dart';
 import 'package:flutter/material.dart';
 
-class Loading extends StatefulWidget{
+class Loading extends StatefulWidget {
+
   final String? text;
 
   const Loading({Key? key, this.text}) : super(key: key);
 
   @override
   LoadingState createState() => LoadingState();
+
 }
 
 class LoadingState extends State<Loading> with SingleTickerProviderStateMixin {

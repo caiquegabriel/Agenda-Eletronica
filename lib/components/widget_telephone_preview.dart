@@ -33,7 +33,7 @@ class TelephonePreviewState extends State<TelephonePreview> {
           color: Colors.grey.withOpacity(0.125)
         ),
         boxShadow: const [ligthShadow],
-        borderRadius: BorderRadius.circular(5)
+        borderRadius: BorderRadius.circular(10)
       ),
       child: InkWell(
         onTap: () {

@@ -223,12 +223,22 @@ class ContactService extends Service {
 
     if (response != null) {
       for (var contact in response) {
+        List name = contact['name'].split(' ');
+        String firstName = name[0];
+        String secondName = name[0];
+
         await registerContact(
           contact: Contact(
-            firstName: contact['name'].split(' ')[0],
-            secondName: contact['name'].split(' ')[1],
+            firstName: firstName,
+            secondName: secondName,
             email: contact['email'],
-            cpf: await (CPFService()).generateCPF()
+            cpf: await (CPFService()).generateCPF(),
+            telephones: [
+              Telephone(
+                telephone: getNumbers(contact['phone'].split(' ')[0]),
+                type: 'trabalho'
+              )
+            ]
           )
         );
       }

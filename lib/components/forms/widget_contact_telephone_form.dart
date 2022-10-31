@@ -8,8 +8,11 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 class ContactTelephoneForm extends StatefulWidget {
 
   final FocusNode? inputFocus;
+
   final String? telephoneValue;
+
   final String? typeValue;
+
   final Function? toNext;
 
   const ContactTelephoneForm({super.key, this.inputFocus, this.toNext, this.telephoneValue, this.typeValue});

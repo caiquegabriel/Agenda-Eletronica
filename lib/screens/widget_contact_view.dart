@@ -48,6 +48,7 @@ class ContactViewState extends State<ContactView> with CommonComponent, Automati
 
     return content(
       enableBackButton: true,
+      backButtonRoute: '/',
       rightButton: CustomButton(
         width: 45,
         height: 45,
