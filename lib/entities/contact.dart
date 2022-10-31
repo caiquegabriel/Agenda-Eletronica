@@ -34,6 +34,7 @@ class Contact {
 
   String? get secondName => _secondName;
 
+  // ignore: unnecessary_getters_setters
   String? get photo => _photo;
 
   String? get email => _email;
@@ -46,6 +47,10 @@ class Contact {
 
   set photo(String? photo) {
     _photo = photo;
+  }
+
+  set id(int? id) {
+    _id = id;
   }
 
   String? principalTelephone() {

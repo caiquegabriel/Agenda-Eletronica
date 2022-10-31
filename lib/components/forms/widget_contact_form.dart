@@ -20,14 +20,11 @@ class ContactForm extends StatefulWidget{
 
   final Function onSubmit;
 
-  final Function feedback;
-
   final Contact contact; 
 
   const ContactForm({
     Key? key,
     required this.contact,
-    required this.feedback,
     required this.onSubmit
   }) : super(key: key);
 
@@ -46,9 +43,11 @@ class ContactFormState extends State<ContactForm> {
   Map<int, FocusNode> telephoneFocus = {};
   Map<String, FocusNode > formFocus = {};
 
-  List<ContactTelephoneForm> _telephonesForms = [];
+  final List<ContactTelephoneForm> _telephonesForms = [];
 
   List<Telephone> telephonesValues = [];
+
+  MaskTextInputFormatter? _maskCPF;
 
   void _loadTelephones() {
     if (widget.contact.telephones.isEmpty || !mounted) return;
@@ -81,6 +80,13 @@ class ContactFormState extends State<ContactForm> {
   void initState() {
     super.initState();
 
+    _maskCPF = MaskTextInputFormatter(
+      mask: '###.###.###-##', 
+      filter: { "#": RegExp(r'[0-9]') },
+      type: MaskAutoCompletionType.lazy,
+      initialText: widget.contact.cpf
+    );
+
     _loadTelephones();
 
     formKeys = { 
@@ -103,6 +109,7 @@ class ContactFormState extends State<ContactForm> {
       formFocus = formFocus;
       formKeys = formKeys;
       _imagePath = widget.contact.photo ?? "";
+      _maskCPF = _maskCPF;
     });
   }
 
@@ -145,7 +152,7 @@ class ContactFormState extends State<ContactForm> {
       if (v.currentState != null) {
         if (v.currentState!.enabled) {
           Map value = v.currentState!.getValue();
-          if (value['telephone'] != null) {
+          if (value['telephone'] != null && value['telephone'].isNotEmpty) {
             telephonesValues.add(
               Telephone(
                 type: value['type'],
@@ -159,7 +166,7 @@ class ContactFormState extends State<ContactForm> {
       }
     });
 
-    if (telephonesValues.length == 0) {
+    if (telephonesValues.isEmpty) {
       customDialog(
         context,
         title: "Nenhum telefone inserido.",
@@ -179,10 +186,16 @@ class ContactFormState extends State<ContactForm> {
     );
 
     widget.onSubmit(contact).then((results) {
+      if (results != true && results != null) {
+        contact.id = results;
+      }
       customDialog(
         context,
-        title: "Dados atualizados!",
-        description: "As informações de ${widget.contact.firstName} foram atualizadas com sucesso!"
+        title: widget.contact.id != null ? "Dados atualizados!" : "Contato criado!",
+        description: widget.contact.id != null ? "As informações de ${widget.contact.firstName} foram atualizadas com sucesso!" : "Um novo contato foi salvo.",
+        callback: () {
+          navigatorPushNamed(context, '/contact_view', arguments: {'contact': contact});
+        }
       );
       return;
     });
@@ -268,13 +281,16 @@ class ContactFormState extends State<ContactForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Container(
+      padding: const EdgeInsets.all(20),
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             alignment: Alignment.center,
             width: double.infinity,
-            height: 260,
+            height: 200,
+            margin: const EdgeInsets.only(bottom: 20),
             child: Stack (
               children: [
                 Container (
@@ -293,7 +309,7 @@ class ContactFormState extends State<ContactForm> {
                     avatar: _imagePath
                   ),
                 ),
-                (_imagePath.isNotEmpty || (widget.contact.photo != null))
+                (_imagePath.isNotEmpty && (widget.contact.photo != null))
                   ?
                     Positioned(
                       left: 5,
@@ -368,7 +384,7 @@ class ContactFormState extends State<ContactForm> {
                   hintColor: Colors.black26,
                   icon: CupertinoIcons.person,
                   margin: const EdgeInsets.only(left: 5, top: 5, bottom: 5),
-                  hintText: "Gabriel"
+                  hintText: "Segundo Nome"
                 ),
               )
             ]
@@ -382,18 +398,11 @@ class ContactFormState extends State<ContactForm> {
                 borderWidth: 0,
                 backgroundColor: const Color.fromRGBO(255, 255, 255,  0.95 ),
                 focusNode: formFocus['cpf'],
-                mask: [
-                  MaskTextInputFormatter(
-                    initialText: widget.contact.cpf.toString(),
-                    mask: '###.###.###-##',
-                    filter: { "#": RegExp(r'[0-9]') },
-                    type: MaskAutoCompletionType.eager
-                  )
-                ],
+                mask: _maskCPF != null ? [_maskCPF!] : null,
                 textColor: Colors.black54,
                 formSubmitFunction: toNext,
                 key: formKeys['cpf'],
-                initialValue: widget.contact.cpf ?? "",
+                initialValue: widget.contact.cpf != null && _maskCPF != null ? _maskCPF!.updateMask(mask: "###.###.###-##").text : "",
                 validatorFunction: (){ },
                 labelColor: Colors.black38,
                 height: 50,
@@ -450,29 +459,33 @@ class ContactFormState extends State<ContactForm> {
           ),
           Container(
             margin: const EdgeInsets.only(top: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CustomButton(
-                  width: 200,
-                  margin: const EdgeInsets.all(5),
-                  onClick: _onFinalSubmit,
-                  height: 45,
-                  backgroundColor: primaryColor,
-                  fontSize: 16,
-                  textColor: Colors.white,
-                  icon: CupertinoIcons.add,
-                  iconSize: 22,
-                  iconMargin: const EdgeInsets.only(right: 20),
-                  text: widget.contact.id != null ? "Atualizar" : "Salvar Contato",
-                  borderRadius: BorderRadius.circular(5),
-                  iconColor: Colors.white.withOpacity(0.5),
-                )
-              ],
+            child: SafeArea(
+              top: false,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  CustomButton(
+                    width: 200,
+                    margin: const EdgeInsets.all(5),
+                    onClick: _onFinalSubmit,
+                    height: 45,
+                    backgroundColor: primaryColor,
+                    fontSize: 16,
+                    textColor: Colors.white,
+                    icon: CupertinoIcons.add,
+                    iconSize: 22,
+                    iconMargin: const EdgeInsets.only(right: 20),
+                    text: widget.contact.id != null ? "Atualizar" : "Salvar Contato",
+                    borderRadius: BorderRadius.circular(5),
+                    iconColor: Colors.white.withOpacity(0.5),
+                  )
+                ],
+              )
             )
           )
         ],
-      );
+      )
+    );
   }
 
   @override

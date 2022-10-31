@@ -56,20 +56,13 @@ class TemplateHeaderState extends State<TemplateHeader> {
                   },
                 )
               :
-                const CustomButton(
-                  width: 45,
-                  height: 45,
-                  icon: CupertinoIcons.search,
-                  textColor: primaryColor,
-                  iconColor: primaryColor,
-                  iconSize: 25,
-                ),
+                const SizedBox.shrink(),
               Expanded(
                 child: Container(
                   alignment: Alignment.center,
                   child: Text(
                     widget.title ?? "Agenda",
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 20.7,
                       fontWeight: FontWeight.w900,
                       letterSpacing: -0.127

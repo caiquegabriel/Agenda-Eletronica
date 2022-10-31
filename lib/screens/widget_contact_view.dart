@@ -7,7 +7,6 @@ import 'package:agenda_eletronica/screens/widget_common_screen.dart';
 import 'package:agenda_eletronica/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../components/widget_custom_button.dart';
 import '../helpers.dart';
@@ -23,7 +22,10 @@ class ContactView extends StatefulWidget {
 
 }
 
-class ContactViewState extends State<ContactView> with CommonComponent {
+class ContactViewState extends State<ContactView> with CommonComponent, AutomaticKeepAliveClientMixin{ 
+
+  @override
+  bool get wantKeepAlive => true;
 
   List<TelephonePreview> _telephones = [];
 
@@ -42,6 +44,8 @@ class ContactViewState extends State<ContactView> with CommonComponent {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return content(
       enableBackButton: true,
       rightButton: CustomButton(
@@ -70,7 +74,8 @@ class ContactViewState extends State<ContactView> with CommonComponent {
             child: ContactPhoto(
               width: 200,
               height: 200,
-              avatar: widget.contact.photo
+              avatar: widget.contact.photo,
+              borderColor: const Color.fromARGB(255, 203, 203, 203)
             ),
           ),
           Details(
@@ -82,9 +87,9 @@ class ContactViewState extends State<ContactView> with CommonComponent {
             titleFontWeight: FontWeight.w400,
             items: {
               'Primeiro nome' : widget.contact.firstName,
-              'Segundo nome' : widget.contact.firstName,
+              'Segundo nome' : widget.contact.secondName,
               'E-mail' : widget.contact.email,
-              'CPF' : widget.contact.cpf
+              'CPF' : maskCPF(widget.contact.cpf)
             },
           ),
           Container(

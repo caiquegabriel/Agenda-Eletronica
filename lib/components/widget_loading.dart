@@ -1,5 +1,4 @@
 import 'package:agenda_eletronica/components/widget_local_image.dart';
-import 'package:agenda_eletronica/style.dart';
 import 'package:flutter/material.dart';
 
 class Loading extends StatefulWidget{

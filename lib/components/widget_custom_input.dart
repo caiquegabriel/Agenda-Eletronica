@@ -130,9 +130,7 @@ class InputState extends State<Input>{
   }
 
   void updateValue(String value) {
-    setState(() {
-      _inputController.text = widget.initialValue ?? "";
-    });
+    _inputController.text = widget.initialValue ?? "";
   }
 
   int getCurrentLenght() {

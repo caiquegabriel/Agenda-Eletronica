@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 void navigatorPushNamed(context, String routeName, {dynamic arguments, bool ignorePushName = false}) { 
 
@@ -32,7 +33,30 @@ bool isEmail(String email) {
 ///
 /// Mascaras
 ///
+String maskTelephone(String? telephone) {
+  if (telephone == null) return "";
+
+  MaskTextInputFormatter telephoneMask = MaskTextInputFormatter(
+    mask: '(##) # ####-####', 
+    filter: { "#": RegExp(r'[0-9]') },
+  );
+
+  return telephoneMask.maskText(telephone);
+}
+
+String maskCPF(String? cpf) {
+  if (cpf == null) return "";
+
+  MaskTextInputFormatter cpfMask = MaskTextInputFormatter(
+    mask: '###.###.###-##', 
+    filter: { "#": RegExp(r'[0-9]') },
+  );
+
+  return cpfMask.maskText(cpf);
+}
+
 ///
+/// Dialogos
 ///
 
 

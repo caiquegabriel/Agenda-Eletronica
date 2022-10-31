@@ -1,12 +1,9 @@
 import 'package:agenda_eletronica/components/forms/widget_contact_form.dart';
-import 'package:agenda_eletronica/data/db/db.dart';
 import 'package:agenda_eletronica/entities/contact.dart';
 import 'package:agenda_eletronica/providers/contact_provider.dart';
 import 'package:agenda_eletronica/screens/widget_common_screen.dart';
-import 'package:agenda_eletronica/services/ContactService.dart';
 import 'package:agenda_eletronica/style.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class ContactRegister extends StatefulWidget {
@@ -18,16 +15,20 @@ class ContactRegister extends StatefulWidget {
 
 }
 
-class ContactRegisterState extends State<ContactRegister> with CommonComponent {
+class ContactRegisterState extends State<ContactRegister> with CommonComponent, AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-    (DB()).deleteAllDataBase();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return content(
       enableBackButton: true,
       title: "Novo Contato",
@@ -36,7 +37,6 @@ class ContactRegisterState extends State<ContactRegister> with CommonComponent {
         children: [
           ContactForm(
             contact: Contact(),
-            feedback: () {},
             onSubmit: Modular.get<ContactProvider>().register,
           )
         ]

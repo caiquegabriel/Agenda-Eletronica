@@ -20,7 +20,10 @@ class HomeScreen extends StatefulWidget {
 
 }
 
-class HomeScreeState extends State<HomeScreen> with CommonComponent {
+class HomeScreeState extends State<HomeScreen> with CommonComponent, AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
 
   ContactProvider contactProvider = Modular.get<ContactProvider>();
 
@@ -41,6 +44,8 @@ class HomeScreeState extends State<HomeScreen> with CommonComponent {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return content(
       rightButton: CustomButton(
         width: 45,
@@ -61,6 +66,7 @@ class HomeScreeState extends State<HomeScreen> with CommonComponent {
             builder: (context, value, _) {
               if (value.contactPreviews == null) {
                 return Container(
+                  key: GlobalKey(),
                   alignment: Alignment.center,
                   child: const Loading(
                     text: "Carregando ..."
@@ -68,11 +74,12 @@ class HomeScreeState extends State<HomeScreen> with CommonComponent {
                 );
               } else if (value.contactPreviews!.isEmpty) {
                 return Container(
+                  key: GlobalKey(),
                   padding: const EdgeInsets.all(15),
                   alignment: Alignment.center,
                   child: RichText(
                     textAlign: TextAlign.center,
-                    text: TextSpan(
+                    text: const TextSpan(
                       style: TextStyle(
                         color: Colors.black
                       ),
@@ -98,6 +105,7 @@ class HomeScreeState extends State<HomeScreen> with CommonComponent {
                 );
               } else {
                 return ListView(
+                  key: GlobalKey(),
                   padding: noEdgeInsets,
                   children: value.contactPreviews!
                 );
@@ -107,5 +115,10 @@ class HomeScreeState extends State<HomeScreen> with CommonComponent {
         )
       )
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

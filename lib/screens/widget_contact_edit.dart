@@ -20,7 +20,10 @@ class ContactEdit extends StatefulWidget {
 
 }
 
-class ContactEditState extends State<ContactEdit> with CommonComponent {
+class ContactEditState extends State<ContactEdit> with CommonComponent, AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
 
   Future onSubmit(Contact contact) {
     return Modular.get<ContactProvider>().udpdateContact(contact);
@@ -67,6 +70,8 @@ class ContactEditState extends State<ContactEdit> with CommonComponent {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return content(
       enableBackButton: true,
       rightButton: CustomButton(
@@ -82,12 +87,9 @@ class ContactEditState extends State<ContactEdit> with CommonComponent {
       child: ListView(
         padding: noEdgeInsets,
         children: [
-          Container(
-            child: ContactForm(
-              contact: widget.contact,
-              feedback: () {},
-              onSubmit: onSubmit,
-            )
+          ContactForm(
+            contact: widget.contact,
+            onSubmit: onSubmit,
           )
         ]
       )

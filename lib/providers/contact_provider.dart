@@ -1,6 +1,6 @@
 import 'package:agenda_eletronica/components/widget_contact_preview.dart';
 import 'package:agenda_eletronica/entities/contact.dart';
-import 'package:agenda_eletronica/services/ContactService.dart';
+import 'package:agenda_eletronica/services/contact_service.dart';
 import 'package:flutter/material.dart';
 
 class ContactProvider extends ChangeNotifier {
@@ -14,23 +14,6 @@ class ContactProvider extends ChangeNotifier {
   List<ContactPreview>? get contactPreviews => _contactPreviews;
 
   List<Contact>? get contacts => _contacts;
-
-  void populeContacts(List<Contact>? contacts) async {
-    _contacts = [];
-
-    if (contacts == null) return;
-
-    for (var contact in contacts) {
-      _contacts!.add(contact);
-    }
-    notifyListeners();
-  }
-
-  Future loadContacts() async {
-    _contactService.fetchContacts()!.then((results) {
-      populeContacts(results);
-    });
-  }
 
   Future removeContact(Contact contact) {
     return _contactService.removeContact(contact: contact)!.then((results) {
@@ -47,7 +30,7 @@ class ContactProvider extends ChangeNotifier {
   }
 
   Future register(Contact contact) {
-    return _contactService.registerContact(contact: contact)!.then((results) {
+    return _contactService.registerContact(contact: contact).then((results) {
       loadContactPreviews();
       return results;
     });
@@ -64,6 +47,7 @@ class ContactProvider extends ChangeNotifier {
     for (Contact contact in contacts) {
       _contactPreviews!.add(
         ContactPreview(
+          key: GlobalKey<ContactPreviewState>(),
           contact: contact
         )
       );

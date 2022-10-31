@@ -1,6 +1,6 @@
 import 'package:agenda_eletronica/entities/telephone.dart';
+import 'package:agenda_eletronica/helpers.dart';
 import 'package:agenda_eletronica/style.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -54,7 +54,7 @@ class TelephonePreviewState extends State<TelephonePreview> {
               ),
             ),
             Text(
-              widget.telephone.telephone.toString(),
+              maskTelephone(widget.telephone.telephone),
               style: const TextStyle(
                 fontSize: 22,
                 color: primaryColor

@@ -1,4 +1,4 @@
-import 'package:agenda_eletronica/services/Service.dart';
+import 'package:agenda_eletronica/services/service.dart';
 
 class CPFService extends Service {
 

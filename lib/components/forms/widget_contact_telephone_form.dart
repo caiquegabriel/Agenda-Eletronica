@@ -27,6 +27,8 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
 
   final GlobalKey<InputState> _inputKey = GlobalKey();
 
+  MaskTextInputFormatter? _maskTelephone;
+
   void hideForm() {
     if (!mounted) return;
 
@@ -39,8 +41,16 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
   void initState() {
     super.initState();
 
+    _maskTelephone = MaskTextInputFormatter(
+      mask: '(##) # ####-####', 
+      filter: { "#": RegExp(r'[0-9]') },
+      type: MaskAutoCompletionType.lazy,
+      initialText: widget.telephoneValue
+    );
+
     setState(() {
       _telephoneType = widget.typeValue ?? "trabalho";
+      _maskTelephone = _maskTelephone;
     });
   }
 
@@ -81,7 +91,7 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
         color: Colors.white,
         border: Border.all(
           width: 1,
-          color: const Color.fromARGB(255, 214, 214, 214)
+          color: const Color.fromARGB(255, 234, 232, 232)
         ),
         borderRadius: BorderRadius.circular(5)
       ),
@@ -151,21 +161,16 @@ class ContactTelephoneFormState extends State<ContactTelephoneForm> {
               borderRadius: 5,
               borderColor: Colors.transparent,
               borderWidth: 0.25,
-              backgroundColor: const Color.fromRGBO(255, 255, 255,  0.95 ),
+              backgroundColor: const Color.fromRGBO(255, 255, 255,  0.95),
               focusNode: widget.inputFocus,
               textColor: Colors.black,
               textWeight: FontWeight.w600,
               formSubmitFunction: widget.toNext,
-              mask: [
-                MaskTextInputFormatter(
-                  initialText: widget.telephoneValue ?? "",
-                  mask: '(##) # ####-####', 
-                  filter: { "#": RegExp(r'[0-9]') },
-                  type: MaskAutoCompletionType.lazy
-                )
-              ],
+              mask: _maskTelephone != null ? [
+                _maskTelephone!
+              ] : null,
               key: _inputKey,
-              initialValue: widget.telephoneValue ?? "",
+              initialValue: widget.telephoneValue != null && _maskTelephone != null ? _maskTelephone!.updateMask(mask: "(##) # ####-####").text : "",
               validatorFunction: (){},
               iconHeight: 35,
               height: 45,

@@ -1,10 +1,9 @@
 import 'package:agenda_eletronica/entities/contact.dart';
 import 'package:agenda_eletronica/entities/telephone.dart';
 import 'package:agenda_eletronica/helpers.dart';
-import 'package:agenda_eletronica/services/CpfService.dart';
-import 'package:agenda_eletronica/services/Service.dart';
+import 'package:agenda_eletronica/services/cpf_service.dart';
+import 'package:agenda_eletronica/services/service.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
 
 class ContactService extends Service {
 
@@ -13,7 +12,7 @@ class ContactService extends Service {
   ///
   /// Cadastrar um novo contato
   ///
-  Future? registerContact({required Contact contact}) async {
+  Future<int?> registerContact({required Contact contact}) async {
     dynamic conn = await dbConn; 
 
     if(conn == null) {
@@ -45,12 +44,11 @@ class ContactService extends Service {
         );
       }
 
-      return true;
+      return contactId;
     } catch (e) {
       debugPrint(e.toString());
     }
-
-
+    return null;
   }
 
   Future? fetchContacts() async {

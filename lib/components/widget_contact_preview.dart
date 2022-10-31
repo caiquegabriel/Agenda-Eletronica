@@ -50,6 +50,7 @@ class ContactPreviewState extends State<ContactPreview> {
         child: Row(
           children: [
             ContactPhoto(
+              key: GlobalKey<ContactPhotoState>(),
               width: 45.5,
               height: 45.5,
               avatar: widget.contact.photo ?? "",
