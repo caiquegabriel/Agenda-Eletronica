@@ -49,10 +49,10 @@ class ContactPreviewState extends State<ContactPreview> {
         ),
         child: Row(
           children: [
-            const ContactPhoto(
+            ContactPhoto(
               width: 45.5,
               height: 45.5,
-              avatar: ""
+              avatar: widget.contact.photo ?? "",
             ),
             Expanded(
               child: Container(

@@ -41,16 +41,16 @@ class ContactPhoto extends StatefulWidget {
 
 class ContactPhotoState extends State<ContactPhoto> {
 
-  //final GlobalKey<CustomImageState> _keyImageNetwork = GlobalKey();
+  final GlobalKey<LocalImageState> localImageKey = GlobalKey();
   
-  String? _avatar;  
+  String? _avatar;
   
   void removeContactPhoto(){
-  //  _keyImageNetwork.currentState!.update("");
+    localImageKey.currentState!.updateImage("");
   }
 
   void updateContactPhoto(dynamic avatar) {    
-  //  _keyImageNetwork.currentState!.update(avatar); 
+    localImageKey.currentState!.updateImage(avatar); 
   }
 
   @override
@@ -70,8 +70,8 @@ class ContactPhotoState extends State<ContactPhoto> {
       margin: widget.margin,
       decoration: BoxDecoration(
         color: Colors.transparent,
-        border: Border.all(color: widget.borderColor ?? Colors.transparent, width: widget.borderWidth ?? 1), 
-        borderRadius: BorderRadius.circular(widget.borderRadius ?? 1000),  
+        border: Border.all(color: widget.borderColor ?? Colors.transparent, width: widget.borderWidth ?? 1),
+        borderRadius: BorderRadius.circular(widget.borderRadius ?? 1000),
       ),  
       clipBehavior: Clip.antiAlias,
       child: Container(    
@@ -91,9 +91,11 @@ class ContactPhotoState extends State<ContactPhoto> {
             }
           }),
           child: LocalImage(
+            key: localImageKey,
             width: widget.width ?? 40,
             height: widget.height ?? 40,
-            image: _avatar!
+            image: _avatar!,
+            fit: BoxFit.cover,
           )
         ),
       ),

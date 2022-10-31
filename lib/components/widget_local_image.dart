@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class LocalImage extends StatefulWidget {
@@ -17,12 +19,26 @@ class LocalImageState extends State<LocalImage> {
 
   String? _image;
 
+  void updateImage(String? image) {
+    image ??= "";
+    File(image).exists().then((results) {
+      if (results) {
+        setState(() {
+          _image = image;
+        });
+      } else {
+        setState(() {
+          _image = null;
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _image = (widget.image.isEmpty) ? null : widget.image;
-    });
+
+    updateImage(widget.image);
   }
 
   @override

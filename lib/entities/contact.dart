@@ -44,6 +44,10 @@ class Contact {
 
   List<Telephone> get telephones => _telephones;
 
+  set photo(String? photo) {
+    _photo = photo;
+  }
+
   String? principalTelephone() {
     String? principalTelephone;
     for (var telephone in _telephones) {

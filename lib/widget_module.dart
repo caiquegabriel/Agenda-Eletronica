@@ -1,5 +1,6 @@
 import 'package:agenda_eletronica/data/local.dart';
 import 'package:agenda_eletronica/providers/contact_provider.dart';
+import 'package:agenda_eletronica/screens/widget_contact_edit.dart';
 import 'package:agenda_eletronica/screens/widget_contact_register.dart';
 import 'package:agenda_eletronica/screens/widget_contact_view.dart';
 import 'package:agenda_eletronica/screens/widget_home_screen.dart';
@@ -27,6 +28,11 @@ class AppModule extends Module {
     ChildRoute(
       '/contact_register',
       child: (context, args) => const ContactRegister(),
+      transition: TransitionType.noTransition
+    ),
+    ChildRoute(
+      '/contact_edit',
+      child: (context, args) =>  ContactEdit(contact: args.data['contact']),
       transition: TransitionType.noTransition
     ),
     ChildRoute(

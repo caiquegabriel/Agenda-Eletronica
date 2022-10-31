@@ -37,8 +37,9 @@ class ContactForm extends StatefulWidget{
 
 class ContactFormState extends State<ContactForm> {
 
-  bool _waitingPhotoUpload = false;
   String _imagePath = "";
+
+  GlobalKey<ContactPhotoState> contactPhotoKey = GlobalKey();
 
   Map<String, GlobalKey<InputState>> formKeys = {};
   Map<int, GlobalKey<ContactTelephoneFormState>> telephoneKeys = {};
@@ -218,41 +219,30 @@ class ContactFormState extends State<ContactForm> {
     });
   }
 
-  void _newPhoto() async { 
-
-    if(_waitingPhotoUpload == true) {
-      return;
-    }
-
+  void _newPhoto() async {
     ImagePicker picker = ImagePicker();
 
     try{
-      Future.delayed(Duration(seconds: 60), (){
-        if(_waitingPhotoUpload == true) {
-        }
-      });
-
       await picker.pickImage(
         source: ImageSource.gallery,
         imageQuality: 35
       ).then((pickedFile) async {
         if(pickedFile != null) {
+          int radomId = Random().nextInt(20000000);
+
+          final Directory directory = await getApplicationDocumentsDirectory();
+          await File(pickedFile.path).copy('${directory.path}/${widget.contact.id}_$radomId.png');
+
+          setState((){
+            _imagePath = '${directory.path}/${widget.contact.id}_$radomId.png';
+          });
+
+          contactPhotoKey.currentState!.updateContactPhoto(_imagePath);
 
           /// Remover a foto anterior do usuário
           if (widget.contact.photo != null) {
             await File(widget.contact.photo!).absolute.delete();
           }
-
-          File file = File(pickedFile.path);
-
-          int radomId = Random().nextInt(20000000);
-
-          final Directory directory = await getApplicationDocumentsDirectory();
-          final File newImage = await file.copy('${directory.path}/${widget.contact.id}_$radomId.png');
-
-          setState((){
-            _imagePath = '${directory.path}/${widget.contact.id}_$radomId.png';
-          });
         }
       });
     } catch(e) {
@@ -260,18 +250,19 @@ class ContactFormState extends State<ContactForm> {
     }
   }
 
-  void _removePhoto() {
-    if(_waitingPhotoUpload == true) {
-      return;
-    } 
- 
-    /*setState((){    
-      _keyPhoto.currentState!.removeImage();  
-      _waitingUpload = false; 
-      _base64File = null;
-      _imageSelected = false;
-      _showOptionsUpload = true;
-    });*/
+  void _removePhoto() async {
+    if (widget.contact.photo != null) {
+      File(widget.contact.photo!).exists().then((results) async {
+        if (results) {
+          await File(widget.contact.photo!).absolute.delete();
+          contactPhotoKey.currentState!.updateContactPhoto(null);
+          setState((){
+            _imagePath = "";
+            widget.contact.photo = null;
+          });
+        }
+      });
+    }
   }
 
 
@@ -298,9 +289,28 @@ class ContactFormState extends State<ContactForm> {
                     borderRadius: BorderRadius.circular(1000)
                   ),
                   child: ContactPhoto(
+                    key: contactPhotoKey,
                     avatar: _imagePath
                   ),
                 ),
+                (_imagePath.isNotEmpty || (widget.contact.photo != null))
+                  ?
+                    Positioned(
+                      left: 5,
+                      bottom: 5,
+                      child: CustomButton(
+                        width: 45,
+                        height: 45,
+                        borderRadius: BorderRadius.circular(1000),
+                        backgroundColor: Colors.red,
+                        icon: CupertinoIcons.trash,
+                        iconColor: Colors.white,
+                        iconSize: 20,
+                        onClick: _removePhoto,
+                      )
+                    )
+                  :
+                    const SizedBox.shrink(),
                 Positioned(
                   right: 5,
                   bottom: 5,
@@ -308,7 +318,7 @@ class ContactFormState extends State<ContactForm> {
                     width: 45,
                     height: 45,
                     borderRadius: BorderRadius.circular(1000),
-                    backgroundColor: primaryDarkColor,
+                    backgroundColor: primaryLighterColor,
                     icon: CupertinoIcons.camera,
                     iconColor: Colors.white,
                     iconSize: 20,
@@ -463,6 +473,11 @@ class ContactFormState extends State<ContactForm> {
           )
         ],
       );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
 }
